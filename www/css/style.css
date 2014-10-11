@@ -1,0 +1,15 @@
+.droid-bar {
+  background-color: #33B5E5;
+  border-color: #0099CC;
+  color: #FFFFFF;
+}
+
+.droid-bar .title {
+  color: #FFFFFF;
+}
+
+.droid-bar .button.button-icon:before {
+  vertical-align: middle;
+  color: #FFFFFF;
+  font-size: 17px;
+}
