@@ -16,21 +16,30 @@
 
 .scoreboard div{
   font-size: 2.2em;
-  padding-top: 2px;
   padding-bottom: 10px;
   text-align: center;
   width: 50%;
 }
 
-#home-divider-title{
- text-align: left;
+.scoreboard .clock {
+  padding: 0;
 }
 
-#players-divider-title{
- text-align: center;
+.item-player-divider{
+  text-align: center;
 }
 
-#away-divider-title{
- text-align: right;
+.item-player{
+  float: left;
+  margin: -1px 0;
+  width: 50%;
 }
 
+.item-player:nth-child(odd){
+  border-left: none;
+  text-align: right;
+}
+
+.item-player p{
+  margin: 0;
+}
