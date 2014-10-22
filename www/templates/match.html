@@ -1,0 +1,109 @@
+<ion-view>
+  <ion-nav-bar>
+    <ion-header-bar align-title="left" class="droid-bar">
+      <ion-nav-back-button class="button-clear">
+        <i class="ion-android-arrow-back"></i>
+      </ion-nav-back-button>
+      <h1 class="title">
+        <i class="ion-ios7-basketball"></i>
+        Doze ou Dez
+      </h1>
+      <div class="buttons">
+        <a class="button button-icon ion-play"></a>
+        <a class="button button-icon ion-stop"></a>
+      </div>
+    </ion-header-bar>
+  </ion-nav-bar>
+  <ion-content>
+      <div class="row row-center scoreboard">
+        <div class="col2">
+          <h2>home</h2>
+          {{homeTeam.score}}
+        </div>
+        <div class="col1 clock">
+          <span>{{clock}}</span>
+        </div>
+        <div class="col2">
+          <h2>away</h2>
+          {{awayTeam.score}}
+        </div>
+      </div>
+      <div class="list">
+        <div class="item item-divider item-player-divider">
+          <div id="players-divider-title">Players</div>
+        </div>
+        <a class="item item-avatar-left item-player" href="#">
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+          <h2>Venkman</h2>
+          <p>2 pontos</p>
+        </a>
+        <a class="item item-avatar-right item-player" href="#">
+          <h2>Venkman</h2>
+          <p>-</p>
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+        <a class="item item-avatar-left item-player" href="#">
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+          <h2>Venkman</h2>
+          <p>2 pontos</p>
+        </a>
+        </a>
+        <a class="item item-avatar-right item-player" href="#">
+          <h2>Venkman</h2>
+          <p>-</p>
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+        </a>
+        <a class="item item-avatar-left item-player" href="#">
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+          <h2>Venkman</h2>
+          <p>2 pontos</p>
+        </a>
+        <a class="item item-avatar-right item-player" href="#">
+          <h2>Venkman</h2>
+          <p>-</p>
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+        </a>
+        <a class="item item-avatar-left item-player" href="#">
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+          <h2>Venkman</h2>
+          <p>2 pontos</p>
+        </a>
+        <a class="item item-avatar-right item-player" href="#">
+          <h2>Venkman</h2>
+          <p>-</p>
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+        </a>
+        <a class="item item-avatar-left item-player" href="#">
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+          <h2>Venkman</h2>
+          <p>-</p>
+        </a>
+        <a class="item item-avatar-right item-player" href="#">
+          <h2>Venkman</h2>
+          <p>-</p>
+          <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
+        </a>
+        <!--
+        <a class="item item-icon-left item-player" href="#/teams/{{homeTeam.id}}/add-player">
+          <i class="icon ion-plus"></i>
+          Add player...
+        </a>
+        <a class="item item-icon-right item-player" href="#/teams/{{awayTeam.id}}/add-player">
+          <i class="icon ion-plus"></i>
+          Add player...
+        </a>
+        -->
+      </div>
+  </ion-content>
+  <!--
+  <ion-footer-bar>
+    <div class="row">
+      <div class="col-50">
+        <a class="button button-icon ion-play"></a>
+      </div>
+      <div class="col-50">
+        <a class="button button-icon ion-stop"></a>
+      </div>
+    </div>
+  </ion-footer-bar>
+  -->
+</ion-view>
