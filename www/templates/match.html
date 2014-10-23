@@ -9,7 +9,7 @@
         Doze ou Dez
       </h1>
       <div class="buttons">
-        <a class="button button-icon ion-play"></a>
+        <a class="button button-icon ion-play" ng-click="start()"></a>
         <a class="button button-icon ion-stop"></a>
       </div>
     </ion-header-bar>
@@ -21,7 +21,7 @@
           {{homeTeam.score}}
         </div>
         <div class="col1 clock">
-          <span>{{clock}}</span>
+          <span>{{clock.format("mm:ss") }}</span>
         </div>
         <div class="col2">
           <h2>away</h2>

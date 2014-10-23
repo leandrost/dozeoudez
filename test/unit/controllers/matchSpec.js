@@ -1,4 +1,4 @@
-describe("Unit Testing Examples", function () {
+describe("MatchCtrl", function () {
 
     var $scope, ctrl, $timeout;
 
@@ -19,7 +19,8 @@ describe("Unit Testing Examples", function () {
             // assign $timeout to a scoped variable so we can use
             // $timeout.flush() later. Notice the _underscore_ trick
             // so we can keep our names clean in the tests.
-            $timeout = _$timeout_;
+            //$timeout = _$timeout_;
+            $timeout = sinon.spy(_$timeout_);
 
             // now run that scope through the controller function,
             // injecting any services or other injectables we need.
@@ -27,22 +28,33 @@ describe("Unit Testing Examples", function () {
             // will be run, so anything that occurs inside of that
             // will already be done before the first spec.
             ctrl = $controller("MatchCtrl", {
-                $scope: $scope
+                $scope: $scope,
+                $timeout: $timeout
             });
         });
 
     });
 
-
-    // Test 1: The simplest of the simple.
-    // here we're going to make sure the $scope variable
-    // exists evaluated.
     it("has a $scope variable", function() {
       expect($scope).to.exist;
     });
 
-    it("has a clock variable", function() {
-      expect($scope.clock).to.equal("00:00");
+    it("set clock by default with 12 minutes remaing", function() {
+      expect($scope.clock.format("mm:ss")).to.equal("12:00");
+    });
+
+    describe("#clockTick()", function () {
+      it("subtract 1 second from clock", function () {
+        $scope.clockTick();
+        expect($scope.clock.format("mm:ss")).to.equal("11:59");
+      });
+    });
+
+    describe("#start()", function () {
+      it("start clock tick", function () {
+        $scope.start();
+        expect($timeout).to.have.been.calledWith($scope.clockTick, 1000);
+      });
     });
 
 });

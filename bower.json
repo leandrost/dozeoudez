@@ -6,6 +6,7 @@
     "angular-cookies": "~1.2.26",
     "angular-mocks": "~1.2.26",
     "angular-touch": "~1.2.26",
-    "ionic": "driftyco/ionic-bower#1.0.0-beta.13"
+    "ionic": "driftyco/ionic-bower#1.0.0-beta.13",
+    "momentjs": "~2.8.3"
   }
 }

@@ -10,7 +10,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha', 'chai', 'sinon-chai'],
 
 
     // list of files / patterns to load in the browser
@@ -26,6 +26,7 @@ module.exports = function(config) {
       'www/lib/ionic/js/ionic.js',
       'www/lib/ionic/js/ionic-angular.min.js',
       'www/lib/ionic/js/ionic-angular.min.js',
+      'www/lib/momentjs/moment.js',
       'www/js/app.js',
       'www/js/controllers.js',
       'test/**/*Spec.js'
