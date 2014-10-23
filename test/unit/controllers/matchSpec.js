@@ -4,7 +4,7 @@ describe("MatchCtrl", function () {
 
     beforeEach(function () {
 
-        module("starter");
+        module("dozeoudez");
 
         // INJECT! This part is critical
         // $rootScope - injected to create a new $scope instance.
