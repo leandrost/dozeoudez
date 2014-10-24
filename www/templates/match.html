@@ -9,8 +9,10 @@
         Doze ou Dez
       </h1>
       <div class="buttons">
-        <a class="button button-icon ion-play" ng-click="start()"></a>
-        <a class="button button-icon ion-stop"></a>
+        <a class="button button-icon"
+          ng-class="{ paused: 'ion-play', running: 'ion-pause' }[status]"
+          ng-click="playPause()"></a>
+        <a class="button button-icon ion-stop" ng-click="reset()"></a>
       </div>
     </ion-header-bar>
   </ion-nav-bar>
@@ -28,6 +30,7 @@
           {{awayTeam.score}}
         </div>
       </div>
+        <!--
       <div class="list">
         <div class="item item-divider item-player-divider">
           <div id="players-divider-title">Players</div>
@@ -82,7 +85,6 @@
           <p>-</p>
           <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
         </a>
-        <!--
         <a class="item item-icon-left item-player" href="#/teams/{{homeTeam.id}}/add-player">
           <i class="icon ion-plus"></i>
           Add player...
@@ -91,19 +93,20 @@
           <i class="icon ion-plus"></i>
           Add player...
         </a>
+      </div>
         -->
-      </div>
+        <div class="button-bar">
+          <a class="button button-outline button-calm">+2</a>
+          <a class="button button-outline button-calm">-2</a>
+          <a class="button button-outline button-calm">+2</a>
+          <a class="button button-outline button-calm">-2</a>
+        </div>
+        <br />
+        <div class="button-bar bar-balanced">
+          <a class="button button-outline button-balanced">+3</a>
+          <a class="button button-outline button-balanced">-3</a>
+          <a class="button button-outline button-balanced">+3</a>
+          <a class="button button-outline button-balanced">-3</a>
+        </div>
   </ion-content>
-  <!--
-  <ion-footer-bar>
-    <div class="row">
-      <div class="col-50">
-        <a class="button button-icon ion-play"></a>
-      </div>
-      <div class="col-50">
-        <a class="button button-icon ion-stop"></a>
-      </div>
-    </div>
-  </ion-footer-bar>
-  -->
 </ion-view>

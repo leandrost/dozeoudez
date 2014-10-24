@@ -1,3 +1,4 @@
+/*jshint expr:true */
 describe("MatchCtrl", function () {
 
     var $scope, ctrl, $timeout;
@@ -48,12 +49,51 @@ describe("MatchCtrl", function () {
         $scope.clockTick();
         expect($scope.clock.format("mm:ss")).to.equal("11:59");
       });
+
+      context("when zero the clock", function () {
+        it("set status to finished", function () {
+          $scope.clock = moment().minute(0).second(1);
+          $scope.clockTick();
+          expect($scope.status).to.equal("finished");
+        });
+      });
     });
 
-    describe("#start()", function () {
-      it("start clock tick", function () {
-        $scope.start();
-        expect($timeout).to.have.been.calledWith($scope.clockTick, 1000);
+    describe("#playPause()", function () {
+      context("when is paused", function () {
+        it("start clock tick", function () {
+          $scope.playPause();
+          expect($timeout).to.have.been.calledWith($scope.clockTick, 1000);
+        });
+        it("sets status to running", function () {
+          $scope.playPause();
+          expect($scope.status).to.equal("running");
+        });
+      });
+
+      context("when is running", function () {
+        xit("stop clock tick", function () { });
+
+        it("sets status to paused", function () {
+          $scope.status = "running";
+          $scope.playPause();
+          expect($scope.status).to.equal("paused");
+        });
+      });
+    });
+
+    describe("#reset()", function () {
+      it("sets status to paused", function () {
+        $scope.status = "finished";
+        $scope.reset();
+        expect($scope.status).to.equal("paused");
+      });
+
+      it("reset the clock to default state", function () {
+        $scope.reset();
+        var clock = $scope.clock;
+        expect(clock.get("minute")).to.equal(12);
+        expect(clock.get("second")).to.equal(0);
       });
     });
 
