@@ -1,8 +1,8 @@
 angular.module("dozeoudez.controllers", []).
 
 controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
-  $scope.homeTeam = { id: 1, name: "Home", score: 0 };
-  $scope.awayTeam = { id: 2, name: "Away", score: 0 };
+  $scope.homeTeam = { id: 1, name: "Home", points: 0 };
+  $scope.awayTeam = { id: 2, name: "Away", points: 0 };
   $scope.status = "paused";
 
   $scope.clock = moment().minutes(12).second(0);
@@ -43,6 +43,11 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
     $scope.stop();
     $scope.clock = moment().minutes(12).second(0);
   };
+
+  $scope.score = function (team, points) {
+    team.points += points;
+  };
+
   //modal
   $ionicModal.fromTemplateUrl('contact-modal.html', {
     scope: $scope,
@@ -63,4 +68,5 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
   });
+
 });

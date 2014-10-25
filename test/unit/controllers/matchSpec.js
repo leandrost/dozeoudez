@@ -89,11 +89,19 @@ describe("MatchCtrl", function () {
         expect($scope.status).to.equal("paused");
       });
 
-      it("reset the clock to default state", function () {
+      it("resets the clock to default state", function () {
         $scope.reset();
         var clock = $scope.clock;
         expect(clock.get("minute")).to.equal(12);
         expect(clock.get("second")).to.equal(0);
+      });
+    });
+
+    describe("#score()", function () {
+      it("change points of a team", function () {
+        var team = { points: 3 };
+        $scope.score(team, 2);
+        expect(team.points).to.equal(5);
       });
     });
 
