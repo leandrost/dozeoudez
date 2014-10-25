@@ -20,14 +20,14 @@
       <div class="row row-center scoreboard">
         <div class="col2">
           <h2>home</h2>
-          {{homeTeam.score}}
+          <a href="#score" ng-click="openModal(homeTeam)">{{homeTeam.score}}</a>
         </div>
         <div class="col1 clock">
           <span>{{clock.format("mm:ss") }}</span>
         </div>
         <div class="col2">
           <h2>away</h2>
-          {{awayTeam.score}}
+          <a href="#score" ng-click="openModal(awayTeam)">{{awayTeam.score}}</a>
         </div>
       </div>
         <!--
@@ -85,6 +85,7 @@
           <p>-</p>
           <img class="item-image" src="http://api.randomuser.me/portraits/med/men/24.jpg">
         </a>
+        -->
         <a class="item item-icon-left item-player" href="#/teams/{{homeTeam.id}}/add-player">
           <i class="icon ion-plus"></i>
           Add player...
@@ -94,19 +95,22 @@
           Add player...
         </a>
       </div>
-        -->
-        <div class="button-bar">
-          <a class="button button-outline button-calm">+2</a>
-          <a class="button button-outline button-calm">-2</a>
-          <a class="button button-outline button-calm">+2</a>
-          <a class="button button-outline button-calm">-2</a>
-        </div>
-        <br />
-        <div class="button-bar bar-balanced">
-          <a class="button button-outline button-balanced">+3</a>
-          <a class="button button-outline button-balanced">-3</a>
-          <a class="button button-outline button-balanced">+3</a>
-          <a class="button button-outline button-balanced">-3</a>
-        </div>
   </ion-content>
+  <script id="contact-modal.html" type="text/ng-template">
+    <div class="modal score-modal">
+      <header>
+        <h1 class="title">Score</h1>
+      </header>
+      <div class="content">
+        {{ modal.team.name}}
+        <input type="number" value="0" />
+        <buton class="button button-outilined button-positive">+ 2</buton>
+        <buton class="button button-outilined button-balanced">+ 3</buton>
+      </div>
+      <div class="actions">
+        <a href="#cancelScore" ng-click="closeModal()">Cancel</a>
+        <a href="#okScore" ng-click="closeModal()">Ok</a>
+      </div>
+    </div>
+  </script>
 </ion-view>

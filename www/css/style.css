@@ -1,15 +1,15 @@
 .droid-bar {
-  background-color: #33B5E5;
-  border-color: #0099CC;
-  color: #FFFFFF;
+  background-color: #33b5e5;
+  border-color: #0099cc;
+  color: #ffffff;
 }
 
 .droid-bar .title {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .droid-bar .button.button-icon:before {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 17px;
   vertical-align: middle;
 }
@@ -42,4 +42,61 @@
 
 .item-player p{
   margin: 0;
+}
+
+.score-modal {
+  background-color: white;
+  width: 70%;
+  min-height: 0;
+  height: 190px;
+  margin: auto;
+  left:0;
+  right:0;
+  top: 0;
+  bottom: 0;
+}
+
+.score-modal header{
+  border-bottom: 2px solid #33b5e5;
+  height: 56px;
+  padding: 0 15px;
+}
+
+.score-modal .title {
+  color: #33b5e5;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 56px;
+}
+
+.score-modal .content {
+  padding: 15px;
+  height: 86px;
+}
+
+.score-modal .content input {
+  display: inline;
+  width: 32px;
+}
+
+.score-modal .actions {
+  display: inline-block;
+  height: 48px;
+  width: 100%;
+}
+.score-modal .actions a {
+  display: block;
+  float: left;
+  font-size: 12px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  color: #000;
+  border-top: 1px solid #ccc;
+  text-decoration: none;
+  width: 50%;
+}
+
+.score-modal .actions a:first-child {
+  border-right: 1px solid #ccc;
 }
