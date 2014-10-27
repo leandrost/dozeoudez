@@ -40,18 +40,20 @@ describe("MatchCtrl", function () {
       expect($scope).to.exist;
     });
 
-    it("set clock by default with 12 minutes remaing", function() {
-      expect($scope.clock.format("mm:ss")).to.equal("12:00");
+    it("sets clock default state to 10 minutes", function() {
+      expect($scope.clock.format("mm:ss")).to.equal("10:00");
     });
 
     describe("#clockTick()", function () {
-      it("subtract 1 second from clock", function () {
+      it("subtracts 1 second from clock", function () {
         $scope.clockTick();
-        expect($scope.clock.format("mm:ss")).to.equal("11:59");
+        var clock = $scope.clock;
+        expect(clock.get("minute")).to.equal(9);
+        expect(clock.get("second")).to.equal(59);
       });
 
       context("when zero the clock", function () {
-        it("set status to finished", function () {
+        it("sets match status to finished", function () {
           $scope.clock = moment().minute(0).second(1);
           $scope.clockTick();
           expect($scope.status).to.equal("finished");
@@ -61,20 +63,20 @@ describe("MatchCtrl", function () {
 
     describe("#playPause()", function () {
       context("when is paused", function () {
-        it("start clock tick", function () {
+        it("starts' clock tick", function () {
           $scope.playPause();
           expect($timeout).to.have.been.calledWith($scope.clockTick, 1000);
         });
-        it("sets status to running", function () {
+        it("sets match status to running", function () {
           $scope.playPause();
           expect($scope.status).to.equal("running");
         });
       });
 
       context("when is running", function () {
-        xit("stop clock tick", function () { });
+        xit("stops clock tick", function () { });
 
-        it("sets status to paused", function () {
+        it("sets match status to paused", function () {
           $scope.status = "running";
           $scope.playPause();
           expect($scope.status).to.equal("paused");
@@ -92,9 +94,18 @@ describe("MatchCtrl", function () {
       it("resets the clock to default state", function () {
         $scope.reset();
         var clock = $scope.clock;
-        expect(clock.get("minute")).to.equal(12);
+        expect(clock.get("minute")).to.equal(10);
         expect(clock.get("second")).to.equal(0);
       });
+
+      it("sets teams score to default state", function () {
+        $scope.homeTeam.points = 7;
+        $scope.awayTeam.points = 12;
+        $scope.reset();
+        expect($scope.homeTeam.points).to.eq(0);
+        expect($scope.awayTeam.points).to.eq(0);
+      });
+
     });
 
     describe("#score()", function () {
@@ -102,6 +113,16 @@ describe("MatchCtrl", function () {
         var team = { points: 3 };
         $scope.score(team, 2);
         expect(team.points).to.equal(5);
+      });
+    });
+
+    context("when a team has 12 points", function () {
+      xit("sets match status to finished", function () {
+        $scope.awayTeam.points = 7;
+        $scope.status = "running";
+        $scope.awayTeam.points = 12;
+        $scope.$digest();
+        expect($scope.status).to.eq("finished");
       });
     });
 

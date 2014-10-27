@@ -1,11 +1,12 @@
 angular.module("dozeoudez.controllers", []).
 
 controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
+  var default_clock = moment().minutes(10).second(0);
+
   $scope.homeTeam = { id: 1, name: "Home", points: 0 };
   $scope.awayTeam = { id: 2, name: "Away", points: 0 };
   $scope.status = "paused";
-
-  $scope.clock = moment().minutes(12).second(0);
+  $scope.clock = default_clock;
 
   $scope.clockTick = function () {
     $scope.clock.subtract(1, "s");
@@ -41,17 +42,25 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
 
   $scope.reset = function () {
     $scope.stop();
-    $scope.clock = moment().minutes(12).second(0);
+    $scope.clock = default_clock;
+    $scope.homeTeam.points = 0;
+    $scope.awayTeam.points = 0;
   };
 
   $scope.score = function (team, points) {
     team.points += points;
   };
 
+  $scope.$watch("awayTeam.points", function () {
+    if ($scope.awayTeam.points == 12) {
+      $scope.status = "finished";
+    }
+  }, true);
+
   //modal
-  $ionicModal.fromTemplateUrl('contact-modal.html', {
+  $ionicModal.fromTemplateUrl("contact-modal.html", {
     scope: $scope,
-    animation: 'fade-in'
+    animation: "fade-in"
   }).then(function(modal) {
     $scope.modal = modal;
   });

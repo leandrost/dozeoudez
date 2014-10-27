@@ -103,7 +103,7 @@
       </header>
       <div class="content">
         {{ modal.team.name}}
-        <input type="number" value="0" />
+        <input type="number" value="0" ng-model="modal.team.points" />
         <buton class="button button-outilined button-positive" ng-click="score(modal.team, 2)">
           + 2
         </buton>
