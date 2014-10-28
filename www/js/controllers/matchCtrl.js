@@ -36,7 +36,20 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
     $scope.clock.minutes(10).second(0);
   };
 
+  var isWinner = function (team) {
+    return team.points >= 12;
+  };
+
+  var finishiByWinner = function () {
+    if (isWinner($scope.awayTeam) || isWinner($scope.homeTeam)) {
+      finish();
+    }
+  };
+
   resetClock();
+
+  $scope.$watch("homeTeam.points", finishiByWinner, true);
+  $scope.$watch("awayTeam.points", finishiByWinner, true);
 
   $scope.clockTick = function () {
     $scope.clock.subtract(1, "s");
@@ -62,15 +75,9 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
   };
 
   $scope.score = function (team, points) {
-    if ($scope.status == "paused") { return ; }
+    if ($scope.status != "running") { return ; }
     team.points += points;
   };
-
-  $scope.$watch("awayTeam.points", function () {
-    if ($scope.awayTeam.points == 12) {
-      finish();
-    }
-  }, true);
 
   //modal
   $ionicModal.fromTemplateUrl("contact-modal.html", {

@@ -12,8 +12,10 @@ describe("MatchCtrl", function () {
         // $controller - injected to create an instance of our controller.
         // $q - injected so we can create promises for our mocks.
         // _$timeout_ - injected to we can flush unresolved promises.
-        inject(function ($rootScope, $controller, $q, _$timeout_) {
+        inject(function ($rootScope, $controller, $q, _$timeout_, $httpBackend) {
 
+          $httpBackend.when('GET', 'templates/match.html').respond(null);
+          $httpBackend.when('GET', 'contact-modal.html').respond(null);
             // create a scope object for us to use.
             $scope = $rootScope.$new();
 
@@ -127,19 +129,43 @@ describe("MatchCtrl", function () {
 
         it("does not change number of points made by a team", function () {
           var team = { points: 3 };
-          $scope.score(team, 4);
+          $scope.score(team, 3);
           expect(team.points).to.equal(3);
+        });
+      });
+
+      context("when match is finished", function () {
+        beforeEach(function () {
+          $scope.status = "finished";
+        });
+
+        it("does not change number of points made by a team", function () {
+          var team = { points: 10 };
+          $scope.score(team, 3);
+          expect(team.points).to.equal(10);
         });
       });
     });
 
-    context("when a team has 12 points", function () {
-      xit("sets match status to finished", function () {
-        $scope.awayTeam.points = 7;
-        $scope.status = "running";
-        $scope.awayTeam.points = 12;
-        $scope.$digest();
-        expect($scope.status).to.eq("finished");
+    describe("$watch()", function () {
+      context("when a team has 12 points", function () {
+        it("sets match status to finished", function () {
+          $scope.awayTeam.points = 7;
+          $scope.status = "running";
+          $scope.awayTeam.points = 12;
+          $scope.$digest();
+          expect($scope.status).to.eq("finished");
+        });
+      });
+
+      context("when a team has more than 12 points", function () {
+        it("sets match status to finished", function () {
+          $scope.homeTeam.points = 10;
+          $scope.status = "running";
+          $scope.homeTeam.points = 13;
+          $scope.$digest();
+          expect($scope.status).to.eq("finished");
+        });
       });
     });
 
