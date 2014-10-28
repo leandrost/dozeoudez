@@ -18,17 +18,21 @@
   </ion-nav-bar>
   <ion-content>
       <div class="row row-center scoreboard">
-        <div class="col2 col-33">
-          <h2>home</h2>
-          <a href="#score" ng-click="openModal(homeTeam)">{{homeTeam.points}}</a>
-        </div>
+        <a class="col2 col-33" href="#score" ng-click="openModal(homeTeam)">
+          <h2>
+            <i class="ion-ios7-basketball-outline"></i>
+          </h2>
+          {{homeTeam.points}}
+        </a>
         <div class="col1 col-33 clock">
           <span>{{clock.format("mm:ss") }}</span>
         </div>
-        <div class="col2 col-33">
-          <h2>away</h2>
-          <a href="#score" ng-click="openModal(awayTeam)">{{awayTeam.points}}</a>
-        </div>
+        <a class="col2 col-33" href="#score" ng-click="openModal(awayTeam)">
+          <h2>
+            <i class="ion-ios7-basketball"></i>
+          </h2>
+          {{awayTeam.points}}
+        </a>
       </div>
       <div class="list">
         <div class="item item-divider item-player-divider">
