@@ -92,8 +92,9 @@ describe("MatchCtrl", function () {
       });
 
       it("resets the clock to default state", function () {
-        $scope.reset();
         var clock = $scope.clock;
+        clock.minutes(7).second(35);
+        $scope.reset();
         expect(clock.get("minute")).to.equal(10);
         expect(clock.get("second")).to.equal(0);
       });

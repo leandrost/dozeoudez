@@ -1,11 +1,10 @@
 angular.module("dozeoudez.controllers", []).
 
 controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
-  var defaultClock = moment().minutes(10).second(0);
   $scope.homeTeam = { id: 1, name: "Home", points: 0 };
   $scope.awayTeam = { id: 2, name: "Away", points: 0 };
   $scope.status = "paused";
-  $scope.clock = defaultClock;
+  $scope.clock = moment();
 
   var start = function() {
     if ($scope.status == "running") { return; }
@@ -33,6 +32,12 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
     return (minutes === 0 && seconds === 0);
   };
 
+  var resetClock = function () {
+    $scope.clock.minutes(10).second(0);
+  };
+
+  resetClock();
+
   $scope.clockTick = function () {
     $scope.clock.subtract(1, "s");
     $scope.timeout = $timeout($scope.clockTick, 1000);
@@ -51,7 +56,7 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
 
   $scope.reset = function () {
     pause();
-    $scope.clock = defaultClock;
+    resetClock();
     $scope.homeTeam.points = 0;
     $scope.awayTeam.points = 0;
   };
