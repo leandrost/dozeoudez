@@ -14,18 +14,26 @@
   vertical-align: middle;
 }
 
-.scoreboard div, a{
+.scoreboard div, .scoreboard a{
   font-size: 2.2em;
   padding-bottom: 10px;
   text-align: center;
 }
 
+.scoreboard {
+ text-align: center;
+}
 .scoreboard a{
   color: #33b5e5;
+  display: block;
 }
 
-.scoreboard .clock {
-  padding: 0;
+.scoreboard a, .scoreboard h2{
+  font-size: 1.4em;
+}
+
+.scoreboard .col-33 {
+  width: 33%;
 }
 
 .scoreboard a{
