@@ -63,7 +63,7 @@ describe("MatchCtrl", function () {
 
     describe("#playPause()", function () {
       context("when is paused", function () {
-        it("starts' clock tick", function () {
+        it("starts the clock", function () {
           $scope.playPause();
           expect($timeout).to.have.been.calledWith($scope.clockTick, 1000);
         });
