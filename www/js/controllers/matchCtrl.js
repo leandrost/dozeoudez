@@ -62,6 +62,7 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
   };
 
   $scope.score = function (team, points) {
+    if ($scope.status == "paused") { return ; }
     team.points += points;
   };
 

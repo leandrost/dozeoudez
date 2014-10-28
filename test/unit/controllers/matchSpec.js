@@ -110,10 +110,26 @@ describe("MatchCtrl", function () {
     });
 
     describe("#score()", function () {
-      it("change points of a team", function () {
+      beforeEach(function () {
+        $scope.status = "running";
+      });
+
+      it("changes number of points made by a team", function () {
         var team = { points: 3 };
         $scope.score(team, 2);
         expect(team.points).to.equal(5);
+      });
+
+      context("when match is paused", function () {
+        beforeEach(function () {
+          $scope.status = "paused";
+        });
+
+        it("does not change number of points made by a team", function () {
+          var team = { points: 3 };
+          $scope.score(team, 4);
+          expect(team.points).to.equal(3);
+        });
       });
     });
 
