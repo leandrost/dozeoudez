@@ -74,11 +74,6 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
     $scope.awayTeam.points = 0;
   };
 
-  $scope.score = function (team, points) {
-    if ($scope.status != "running") { return ; }
-    team.points += points;
-  };
-
   //modal
   $ionicModal.fromTemplateUrl("contact-modal.html", {
     scope: $scope,
@@ -90,6 +85,12 @@ controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
   $scope.openModal = function(team) {
     $scope.modal.team = team;
     $scope.modal.show();
+  };
+
+  $scope.score = function (team, points) {
+    if ($scope.status != "running") { return ; }
+    team.points += points;
+    $scope.closeModal();
   };
 
   $scope.closeModal = function() {
