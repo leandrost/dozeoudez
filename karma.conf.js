@@ -29,6 +29,7 @@ module.exports = function(config) {
       'www/lib/momentjs/moment.js',
       'www/js/app.js',
       'www/js/controllers/**/*.js',
+      'www/js/services/**/*.js',
       'test/**/*Spec.js'
     ],
 

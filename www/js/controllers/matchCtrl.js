@@ -1,6 +1,8 @@
-angular.module("dozeoudez.controllers", []).
+angular.module("dozeoudez.controllers", ["dozeoudez.services"]).
 
-controller("MatchCtrl", function($scope, $timeout, $ionicModal) {
+controller("MatchCtrl", function($scope, Game, $timeout, $ionicModal) {
+  $scope.game = new Game();
+
   $scope.homeTeam = { id: 1, name: "Home", points: 0 };
   $scope.awayTeam = { id: 2, name: "Away", points: 0 };
   $scope.status = "paused";
