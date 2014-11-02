@@ -20,5 +20,8 @@
     "chai": "~1.9.2",
     "karma-chai": "~0.1.0",
     "karma-sinon-chai": "~0.2.0"
+  },
+  "scripts": {
+    "postinstall" : "node_modules/.bin/bower install"
   }
 }
