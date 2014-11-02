@@ -19,10 +19,11 @@
     "karma-mocha": "~0.1.9",
     "chai": "~1.9.2",
     "karma-chai": "~0.1.0",
-    "karma-sinon-chai": "~0.2.0"
+    "karma-sinon-chai": "~0.2.0",
+    "karma-phantomjs-launcher": "~0.1.4"
   },
   "scripts": {
-    "postinstall" : "node_modules/.bin/bower install",
-    "test" : "node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
+    "postinstall": "node_modules/.bin/bower install",
+    "test": "node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
   }
 }
