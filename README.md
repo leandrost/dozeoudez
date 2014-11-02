@@ -5,9 +5,8 @@ A app to track game time and score when you are playing basketball with your fri
 
 ## Dependences
 
-* nodejs
-* ionic
-* ionic
+* [Node.js](http://nodejs.org/)
+* [Ionic](http://ionicframework.com/)
 
 ## Install
 
@@ -15,22 +14,21 @@ A app to track game time and score when you are playing basketball with your fri
 $ npm install
 ```
 
-### Run
-
-### Browse
+### Runing on Browse
 
 ```bash
 $ ionic serve
 ```
 
-### Android device
+### Running on Android device
 
 ```bash
 $ ionic run android
 ```
-## Run Test
+
+## Tests
 
 ```bash
-$ karma start
+$ npm test
 ```
 
