@@ -17,13 +17,13 @@ A app to track game time and score when you are playing basketball with your fri
 $ npm install
 ```
 
-### Run in browse
+## Run in browse
 
 ```bash
 $ ionic serve
 ```
 
-### Run in android device
+## Run in android device
 
 ```bash
 $ ionic run android
