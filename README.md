@@ -6,32 +6,35 @@ Doze ou Dez
 
 A app to track game time and score when you are playing basketball with your friends, enjoy!
 
-## Dependences
+## Requirements
 
 * [Node.js](http://nodejs.org/)
 * [Ionic](http://ionicframework.com/)
 
-## Install
+## Installation
 
 ```bash
 $ npm install
 ```
 
-### Runing on Browse
+### Run in browse
 
 ```bash
 $ ionic serve
 ```
 
-### Running on Android device
+### Run in android device
 
 ```bash
 $ ionic run android
 ```
 
-## Tests
+## Run the tests
 
 ```bash
 $ npm test
 ```
 
+## License
+
+[MIT](LICENSE)
