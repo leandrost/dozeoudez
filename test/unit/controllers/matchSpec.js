@@ -7,13 +7,7 @@ describe("MatchCtrl", function () {
 
         module("dozeoudez");
 
-        // INJECT! This part is critical
-        // $rootScope - injected to create a new $scope instance.
-        // $controller - injected to create an instance of our controller.
-        // $q - injected so we can create promises for our mocks.
-        // _$timeout_ - injected to we can flush unresolved promises.
-        inject(function ($rootScope, $controller, $q, _$timeout_, $httpBackend) {
-
+        inject(function ($rootScope, $controller, _$timeout_, $httpBackend) {
           $httpBackend.when('GET', 'templates/match.html').respond(null);
           $httpBackend.when('GET', 'contact-modal.html').respond(null);
             // create a scope object for us to use.

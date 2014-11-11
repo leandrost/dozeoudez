@@ -1,4 +1,4 @@
-angular.module('dozeoudez', ['ionic', 'dozeoudez.controllers'])
+angular.module('dozeoudez', ['ionic', 'dozeoudez.controllers', 'dozeoudez.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
