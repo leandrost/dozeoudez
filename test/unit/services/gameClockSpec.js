@@ -4,7 +4,7 @@ describe("GameClock", function () {
     var subject;
 
     beforeEach(function () {
-      module('dozeoudez.services');
+      module("dozeoudez.services");
 
       inject(function(GameClock, _$timeout_) {
         subject = GameClock;
@@ -14,8 +14,8 @@ describe("GameClock", function () {
 
     it("time is 10:00 by default", function () {
       var time = subject.time;
-      expect(time.get('minute')).to.equal(10);
-      expect(time.get('second')).to.equal(0);
+      expect(time.get("minute")).to.equal(10);
+      expect(time.get("second")).to.equal(0);
     });
 
     describe("#start()", function () {
