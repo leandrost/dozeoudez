@@ -70,8 +70,6 @@ describe("MatchCtrl", function () {
       });
 
       context("when is running", function () {
-        xit("stops clock tick", function () { });
-
         it("sets match status to paused", function () {
           $scope.status = "running";
           $scope.playPause();
