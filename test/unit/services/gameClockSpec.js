@@ -4,11 +4,13 @@ describe("GameClock", function () {
     var subject;
 
     beforeEach(function () {
-      module("dozeoudez.services");
+      module("dozeoudez.services", function ($provide) {
+        $timeout = sinon.spy();
+        $provide.value("$timeout", $timeout);
+      });
 
-      inject(function(GameClock, _$timeout_) {
-        subject = GameClock;
-        $timeout = sinon.spy(_$timeout_);
+      inject(function(GameClock) {
+        subject = new GameClock();
       });
     });
 
