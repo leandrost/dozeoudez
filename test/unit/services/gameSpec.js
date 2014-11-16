@@ -12,14 +12,17 @@ describe("Game", function () {
     });
 
     describe("new", function () {
-      it("status is paused", function () {
+      it("#status is paused", function () {
         expect(subject.status).to.equal("paused");
       });
-      it("start_at is null", function () {
+      it("#start_at is null", function () {
         expect(subject.start_at).to.equal(null);
       });
-      it("score is zero for both teams", function () {
-        expect(subject.score).to.deep.equal({ home: 0, away: 0 });
+      it("#homeTeam points is zero", function () {
+        expect(subject.homeTeam.points).to.equal(0);
+      });
+      it("#awayTeam points is zero", function () {
+        expect(subject.awayTeam.points).to.equal(0);
       });
     });
 

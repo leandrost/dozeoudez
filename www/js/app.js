@@ -1,4 +1,4 @@
-angular.module('dozeoudez', ['ionic', 'dozeoudez.controllers', 'dozeoudez.services'])
+angular.module("dozeoudez", ["ionic", "dozeoudez.controllers", "dozeoudez.services"])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -20,13 +20,13 @@ angular.module('dozeoudez', ['ionic', 'dozeoudez.controllers', 'dozeoudez.servic
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
-    .state('match', {
-      url: "/match",
-      templateUrl: "templates/match.html",
-      controller: 'MatchCtrl'
+    .state("game", {
+      url: "/game",
+      templateUrl: "templates/game.html",
+      controller: "GameCtrl"
     });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/match');
+  $urlRouterProvider.otherwise("/game");
 
 });

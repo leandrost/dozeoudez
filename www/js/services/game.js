@@ -1,4 +1,5 @@
 angular.module("dozeoudez.services")
+
 .factory("Game", function(GameClock) {
   var STATUSES = {
     paused: "paused",
@@ -9,8 +10,9 @@ angular.module("dozeoudez.services")
   function Game() {
     this.start_at = null;
     this.status = STATUSES.paused;
-    this.clock = GameClock;
-    this.score = { home: 0, away: 0 };
+    this.clock = new GameClock(this);
+    this.homeTeam = { points: 0 };
+    this.awayTeam = { points: 0 };
   }
 
   Game.STATUSES = STATUSES;

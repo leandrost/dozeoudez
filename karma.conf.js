@@ -27,9 +27,8 @@ module.exports = function(config) {
       'www/lib/ionic/js/ionic-angular.min.js',
       'www/lib/ionic/js/ionic-angular.min.js',
       'www/lib/momentjs/moment.js',
+      'www/js/modules.js',
       'www/js/app.js',
-      'www/js/services.js',
-      'www/js/controllers.js',
       'www/js/**/*.js',
       'test/**/*Spec.js'
     ],
