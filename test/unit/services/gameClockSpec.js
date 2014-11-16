@@ -11,7 +11,6 @@ describe("GameClock", function () {
       });
 
       inject(function(GameClock, Game) {
-        service = GameClock;
         game = new Game();
         subject = new GameClock(game);
         game.clock = subject;
