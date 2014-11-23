@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.ionicframework.dozeoudez243749" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>dozeoudez</name>
+  <name>Doze Ou Dez</name>
   <description>
-        An Ionic Framework and Cordova project.
-    </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
-    </author>
+    A cool basketball app.
+  </description>
+  <author email="leandro.s.thimoteo@gmai.com" href="https://github.com/leandrost/dozeoudez">
+    Leandro Thimóteo
+  </author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
@@ -16,4 +16,11 @@
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
+  <icon src="www/res/drawable-xxxhdpi/icon.png" />
+  <platform name="android">
+    <icon src="www/res/drawable-ldpi/icon.png" density="ldpi" />
+    <icon src="www/res/drawable-mdpi/icon.png" density="mdpi" />
+    <icon src="www/res/drawable-hdpi/icon.png" density="hdpi" />
+    <icon src="www/res/drawable-xhdpi/icon.png" density="xhdpi" />
+  </platform>
 </widget>
