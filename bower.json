@@ -2,7 +2,9 @@
   "name": "dozeoudez",
   "private": "true",
   "dependencies": {
-    "momentjs": "~2.8.3"
+    "momentjs": "~2.8.3",
+    "angular-pouchdb": "~0.1.5",
+    "es5-shim": "~4.0.3"
   },
   "devDependencies": {
     "angular": "~1.2.26",
