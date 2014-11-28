@@ -4,6 +4,7 @@ describe("GameClock", function () {
     var subject, $timeout, game;
 
     beforeEach(function () {
+      module("dozeoudez");
       module("dozeoudez.services", function ($provide) {
         $timeout = sinon.stub();
         $timeout.cancel = sinon.stub();

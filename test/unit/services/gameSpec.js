@@ -1,22 +1,27 @@
 /*jshint expr:true */
-describe("Game", function () {
+describe.only("Game", function () {
 
-    var subject;
+    var subject, db;
 
     beforeEach(function () {
-      module('dozeoudez.services');
+      module("dozeoudez");
+      module("dozeoudez.services", function ($provide) {
+        db = sinon.stub();
+        $provide.value("db", db);
+      });
+
       inject(function(Game) {
         subject = new Game();
         subject.clock.start = sinon.stub();
       });
     });
 
-    describe("new", function () {
+    describe("Constructor", function () {
       it("#status is paused", function () {
         expect(subject.status).to.equal("paused");
       });
-      it("#start_at is null", function () {
-        expect(subject.start_at).to.equal(null);
+      it("#startAt is null", function () {
+        expect(subject.startAt).to.equal(null);
       });
       it("#homeTeam points is zero", function () {
         expect(subject.homeTeam.points).to.equal(0);
@@ -41,11 +46,11 @@ describe("Game", function () {
         expect(subject.status).to.equal("running");
       });
 
-      it("sets start_at to now", function () {
+      it("sets startAt to now", function () {
         var freezedMoment = moment("2010-10-20 4:30", "YYYY-MM-DD HH:mm");
         moment = sinon.stub().returns(freezedMoment);
         subject.start();
-        expect(subject.start_at).to.equal(freezedMoment);
+        expect(subject.startAt).to.equal(freezedMoment);
       });
     });
 
@@ -82,4 +87,27 @@ describe("Game", function () {
         expect(subject.status).to.equal("finished");
       });
     });
+
+    //WIP
+    describe.only("#save()", function () {
+      beforeEach(function () {
+        db.put = sinon.stub();
+      });
+
+      it.only("persist game saveable attributes on database", function () {
+        subject.status = "running";
+        subject.startAt = moment("2010-10-20 10:30", "YYYY-MM-DD HH:mm");
+        subject.homeTeam = { points: 7 };
+        subject.awayTeam = { points: 2 };
+        subject.save();
+        expect(db.put).to.have.been.calledWith({
+          status: "running",
+          startAt: "2010-10-20TZ19:30",
+          homeTeam: { points: 7 },
+          awayTeam: { points: 2 }
+        });
+      });
+
+    });
+
 });

@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'www/lib/lodash/dist/lodash.js',
       'www/lib/es5-shim/es5-shim.js',
       'www/lib/momentjs/moment.js',
       'www/lib/pouchdb/dist/pouchdb-nightly.js',
