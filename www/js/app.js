@@ -1,4 +1,9 @@
-angular.module("dozeoudez", ["ionic", "dozeoudez.controllers", "dozeoudez.services"])
+angular.module("dozeoudez", [
+  "ionic",
+  "pouchdb",
+  "dozeoudez.controllers",
+  "dozeoudez.services"
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

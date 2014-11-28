@@ -4,7 +4,9 @@
   "dependencies": {
     "momentjs": "~2.8.3",
     "angular-pouchdb": "~0.1.5",
-    "es5-shim": "~4.0.3"
+    "es5-shim": "~4.0.3",
+    "lodash": "~2.4.1",
+    "moment-timezone": "~0.2.5"
   },
   "devDependencies": {
     "angular": "~1.2.26",
