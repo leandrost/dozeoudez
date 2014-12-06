@@ -30,6 +30,9 @@ angular.module("dozeoudez.controllers")
     $scope.homeTeam = game.homeTeam;
     $scope.awayTeam = game.awayTeam;
     $scope.clock = game.clock;
+    Game.current().then(function (game) {
+      console.log(game);
+    });
   };
 
   $scope.reset();

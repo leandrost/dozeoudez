@@ -1,5 +1,7 @@
 angular.module("dozeoudez.services")
 
-.factory("db", function (pouchdb) {
-  return pouchdb.create("dozeoudez");
+.factory("db", function (pouchdb, $window) {
+  var db = pouchdb.create("dozeoudez");
+  $window.db = db;
+  return db;
 });
