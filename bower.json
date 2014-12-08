@@ -2,15 +2,11 @@
   "name": "dozeoudez",
   "private": "true",
   "dependencies": {
-    "momentjs": "~2.8.3",
     "angular-pouchdb": "~0.1.5",
     "es5-shim": "~4.0.3",
-<<<<<<< HEAD
-    "lodash": "~2.4.1",
-    "moment-timezone": "~0.2.5"
-=======
+    "momentjs": "~2.8.3",
+    "moment-timezone": "~0.2.5",
     "lodash": "~2.4.1"
->>>>>>> 43e724e10138b68a87750cc770524c0f66b8e495
   },
   "devDependencies": {
     "angular": "~1.2.26",

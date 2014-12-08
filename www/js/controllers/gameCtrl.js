@@ -8,34 +8,32 @@ angular.module("dozeoudez.controllers")
   };
 
   var finishByWinner = function () {
-    if (isWinner($scope.awayTeam) || isWinner($scope.homeTeam)) {
-      game.finish();
+    if (isWinner($scope.game.awayTeam) || isWinner($scope.game.homeTeam)) {
+      $scope.game.finish();
     }
   };
 
-  $scope.$watch("homeTeam.points", finishByWinner, true);
-  $scope.$watch("awayTeam.points", finishByWinner, true);
+  $scope.$watch("game.homeTeam.points", finishByWinner, true);
+  $scope.$watch("game.awayTeam.points", finishByWinner, true);
 
   $scope.playPause = function () {
-    if (game.status == "running") {
-      game.pause();
+    if ($scope.game.status == "running") {
+      $scope.game.pause();
     } else {
-      game.start();
+      $scope.game.start();
     }
   };
 
   $scope.reset = function () {
-    game = new Game();
-    $scope.game = game;
-    $scope.homeTeam = game.homeTeam;
-    $scope.awayTeam = game.awayTeam;
-    $scope.clock = game.clock;
-    Game.current().then(function (game) {
-      console.log(game);
-    });
+    $scope.game = new Game();
   };
 
   $scope.reset();
+
+  Game.current().then(function (game) {
+    if (!game) { return; }
+    $scope.game = game;
+  });
 
   //modal
 
@@ -52,7 +50,7 @@ angular.module("dozeoudez.controllers")
   };
 
   $scope.score = function (team, points) {
-    if (game.status != "running") { return ; }
+    if ($scope.game.status != "running") { return ; }
     team.points += points;
     $scope.closeModal();
   };

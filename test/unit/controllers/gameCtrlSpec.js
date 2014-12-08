@@ -49,7 +49,6 @@ describe(Controller, function () {
     });
 
     describe("#reset()", function () {
-
       it("assigns a new game", function () {
         $scope.game.status = "finished";
         var oldGame = $scope.game;
@@ -57,18 +56,6 @@ describe(Controller, function () {
         expect($scope.game.status).to.equal("paused");
         expect($scope.game).to.not.equal(oldGame);
       });
-
-      it("re-assigns clock", function () {
-        $scope.reset();
-        expect($scope.clock).to.equal($scope.game.clock);
-      });
-
-      it("re-assigns teams", function () {
-        $scope.reset();
-        expect($scope.homeTeam).to.eq($scope.game.homeTeam);
-        expect($scope.awayTeam).to.eq($scope.game.awayTeam);
-      });
-
     });
 
     describe("#score()", function () {
@@ -121,7 +108,7 @@ describe(Controller, function () {
 
       context("when a team has 12 points", function () {
         it("sets the game status to finished", function () {
-          $scope.homeTeam.points = 12;
+          $scope.game.homeTeam.points = 12;
           $scope.$digest();
           expect($scope.game.finish).to.have.been.called;
         });
@@ -129,7 +116,7 @@ describe(Controller, function () {
 
       context("when a team has more than 12 points", function () {
         it("sets the game status to finished", function () {
-          $scope.awayTeam.points = 13;
+          $scope.game.awayTeam.points = 13;
           $scope.$digest();
           expect($scope.game.finish).to.have.been.called;
         });
