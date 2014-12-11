@@ -143,7 +143,19 @@ describe.only("Game", function () {
         expect(subject.id).to.equal("fake-id");
         expect(subject.rev).to.equal("fake-rev");
       });
-
     });
+
+    describe("#load()", function () {
+    });
+
+    describe("#clockTime()", function () {
+      it("returns clock.time formated", function () {
+        subject.clock.time = moment.duration({ minutes: 7, seconds: 2 });
+        var clockTime = subject.clockTime();
+        expect(clockTime).to.equal("07:02");
+      });
+    });
+
+
 
 });

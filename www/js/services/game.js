@@ -13,10 +13,10 @@ angular.module("dozeoudez.services")
 
     self.startAt = null;
     self.status = STATUSES.paused;
-    self.clock = new GameClock(self);
     self.homeTeam = { points: 0 };
     self.awayTeam = { points: 0 };
-    
+    self.clock = new GameClock(self);
+
     var setIdAndRevision = function(response){
       self.id = response.id;
       self.rev = response.rev;
@@ -56,6 +56,7 @@ angular.module("dozeoudez.services")
         self.save();
       },
       finish: function () {
+        console.log(0);
         self.clock.stop();
         self.status = STATUSES.finished;
         self.save();
@@ -63,7 +64,13 @@ angular.module("dozeoudez.services")
       save: function () {
         var doc = parseToDoc(self);
         return db.post(doc).then(setIdAndRevision);
-      }
+      },
+      isRunning: function () {
+        return self.status == "running";
+      },
+      clockTime: function () {
+        return moment.utc(self.clock.time.asMilliseconds()).format("mm:ss");
+      },
     };
 
     _.extend(this, public);
@@ -79,14 +86,31 @@ angular.module("dozeoudez.services")
       }
     };
     var returnGame = function (response) {
-      if (response.rows.length == 0) {
+      if (response.rows.length === 0) {
         return null;
       }
-      var game = new Game();
-      _.extend(game, response.rows[0].key);
-      return game;
+      return Game.load(response.rows[0].key);
     };
     return db.query(runningGame, { limit: 1 }).then(returnGame);
+  };
+
+  // TODO spec
+  Game.load = function (attrs) {
+    var game = new Game();
+    attrs.startAt = moment(attrs.startAt);
+    _.extend(game, attrs);
+    var clock = new GameClock(game);
+    if (game.isRunning()) {
+      if (clock.isTimesUp()) {
+        console.log('finished');
+        game.finish();
+      } else {
+        console.log('resume');
+        game.start();
+      }
+    }
+    game.clock = clock;
+    return game;
   };
 
   return Game;

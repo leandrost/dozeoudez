@@ -30,7 +30,10 @@ angular.module("dozeoudez.controllers")
 
   $scope.reset();
 
+  // TODO spec
   Game.current().then(function (game) {
+    console.log("current");
+    console.log(game);
     if (!game) { return; }
     $scope.game = game;
   });

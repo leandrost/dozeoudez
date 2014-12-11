@@ -32,8 +32,8 @@ describe("GameClock", function () {
       it("subtracts 1 second from time", function () {
         subject.start();
         var time = subject.time;
-        expect(time.get("minute")).to.equal(9);
-        expect(time.get("second")).to.equal(59);
+        expect(time.minutes()).to.equal(9);
+        expect(time.seconds()).to.equal(59);
       });
       it("subtracts 1 second every 1 seconds", function () {
         subject.start();
@@ -46,9 +46,11 @@ describe("GameClock", function () {
         expect(subject.timer).to.equal(timer);
       });
 
-      context("when times up", function () {
+      context.only("when times up", function () {
         beforeEach(function () {
-          subject.time.minutes(0).seconds(1);
+          console.log(subject.time);
+          subject.time = moment.duration(1, "seconds");
+          console.log(subject.time);
         });
 
         it("finishes the game", function () {
