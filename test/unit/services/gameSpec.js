@@ -1,16 +1,19 @@
 /*jshint expr:true */
-describe.only("Game", function () {
+describe("Game", function () {
 
-    var subject, db;
+    var model, subject, db;
 
     beforeEach(function () {
       module("dozeoudez");
       module("dozeoudez.services", function ($provide) {
         db = sinon.stub();
+        var fakePromise = sinon.stub({ then: function () { } });
+        db.post = sinon.stub().returns(fakePromise);
         $provide.value("db", db);
       });
 
       inject(function(Game) {
+        model = Game;
         subject = new Game();
         subject.clock.start = sinon.stub();
       });
@@ -60,7 +63,7 @@ describe.only("Game", function () {
       });
 
     });
-
+  
     describe("#pause()", function () {
       beforeEach(function () {
         subject.clock.stop = sinon.stub();
@@ -146,6 +149,27 @@ describe.only("Game", function () {
     });
 
     describe("#load()", function () {
+      it("assigns attributes", function () {
+        var fields = {
+          status: "finished",
+          homeTeam: { points: 10 },
+        };
+        var game = model.load(fields);
+        expect(game.status).to.equal("finished");
+        expect(game.homeTeam).to.deep.equal({ points: 10 });
+      });
+      it("assigns a date field as moment", function () {
+        var subject = model.load({ startAt: "2014-10-18T18:45:02" });
+        var startAtMoment = moment("2014-10-18T18:45:02");
+        expect(subject.startAt).to.deep.equal(startAtMoment);
+      });
+
+      context("when game is running and times up", function () {
+        it("finish the game", function () {
+          var subject = model.load({ status: "running", startAt: "2014-10-18T18:45:02" });
+          expect(subject.status).to.equal("finished");
+        });
+      });
     });
 
     describe("#clockTime()", function () {

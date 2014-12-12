@@ -50,13 +50,19 @@ angular.module("dozeoudez.services")
         self.status = STATUSES.running;
         self.save();
       },
+      resume: function () {
+        self.clock.refresh();
+        if (self.clock.isTimesUp()) {
+          self.status = STATUSES.finished;
+        }
+        self.save();
+      },
       pause: function () {
         self.clock.stop();
         self.status = STATUSES.paused;
         self.save();
       },
       finish: function () {
-        console.log(0);
         self.clock.stop();
         self.status = STATUSES.finished;
         self.save();
@@ -80,10 +86,8 @@ angular.module("dozeoudez.services")
 
   // TODO spec
   Game.current = function () {
-    var runningGame = function (doc) {
-      if (doc.status == "running") {
-        emit(doc);
-      }
+    var lastGame = function (doc) {
+      emit(doc);
     };
     var returnGame = function (response) {
       if (response.rows.length === 0) {
@@ -91,7 +95,7 @@ angular.module("dozeoudez.services")
       }
       return Game.load(response.rows[0].key);
     };
-    return db.query(runningGame, { limit: 1 }).then(returnGame);
+    return db.query(lastGame, { limit: 1 }).then(returnGame);
   };
 
   // TODO spec
@@ -99,17 +103,8 @@ angular.module("dozeoudez.services")
     var game = new Game();
     attrs.startAt = moment(attrs.startAt);
     _.extend(game, attrs);
-    var clock = new GameClock(game);
-    if (game.isRunning()) {
-      if (clock.isTimesUp()) {
-        console.log('finished');
-        game.finish();
-      } else {
-        console.log('resume');
-        game.start();
-      }
-    }
-    game.clock = clock;
+    game.clock = new GameClock(game);
+    game.resume();
     return game;
   };
 

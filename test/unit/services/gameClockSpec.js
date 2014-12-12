@@ -46,7 +46,7 @@ describe("GameClock", function () {
         expect(subject.timer).to.equal(timer);
       });
 
-      context.only("when times up", function () {
+      context("when times up", function () {
         beforeEach(function () {
           console.log(subject.time);
           subject.time = moment.duration(1, "seconds");
