@@ -161,11 +161,13 @@ describe("Game", function () {
       it("assigns a date field as moment", function () {
         var subject = model.load({ startAt: "2014-10-18T18:45:02" });
         var startAtMoment = moment("2014-10-18T18:45:02");
-        expect(subject.startAt).to.deep.equal(startAtMoment);
+        expect(subject.startAt.format()).to.deep.equal(startAtMoment.format());
       });
 
       context("when game is running and times up", function () {
         it("finish the game", function () {
+          var freezedMoment = moment("2014-10-18 17:30", "YYYY-MM-DD HH:mm");
+          sinon.useFakeTimers(freezedMoment.toDate().getTime());
           var subject = model.load({ status: "running", startAt: "2014-10-18T18:45:02" });
           expect(subject.status).to.equal("finished");
         });
@@ -179,7 +181,5 @@ describe("Game", function () {
         expect(clockTime).to.equal("07:02");
       });
     });
-
-
 
 });

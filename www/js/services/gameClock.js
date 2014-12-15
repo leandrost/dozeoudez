@@ -19,9 +19,10 @@ angular.module("dozeoudez.services")
     // TODO spec
     self.refresh = function() {
       var elapsedTime = moment().diff(self.game.startAt, "s");
-      self.time.subtract(elapsedTime, "s");
-      if (self.time.asSeconds() >= 0) {
+      if (elapsedTime <= 0) {
         self.time = moment.duration(0, "minutes");
+      } else {
+        self.time.subtract(elapsedTime, "s");
       }
     };
 

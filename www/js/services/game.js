@@ -20,10 +20,12 @@ angular.module("dozeoudez.services")
     var setIdAndRevision = function(response){
       self.id = response.id;
       self.rev = response.rev;
+      self._rev = response.rev;
     };
 
     var parseToDoc = function (obj) {
       var doc = { _id: obj.id, _rev: obj.rev };
+      console.log(doc);
       _.each(obj.dbFields, function(field) {
         var value = obj[field];
         if (moment.isMoment(value)){
@@ -48,13 +50,21 @@ angular.module("dozeoudez.services")
         self.startAt = moment();
         self.clock.start();
         self.status = STATUSES.running;
+        console.log(7);
+        console.log(self);
         self.save();
       },
       resume: function () {
         self.clock.refresh();
-        if (self.clock.isTimesUp()) {
-          self.status = STATUSES.finished;
+        if (self.isRunning()) {
+          if (self.clock.isTimesUp()) {
+            self.status = STATUSES.finished;
+          } else {
+            self.start();
+          }
         }
+        console.log(8);
+        console.log(self);
         self.save();
       },
       pause: function () {
@@ -68,8 +78,14 @@ angular.module("dozeoudez.services")
         self.save();
       },
       save: function () {
+        console.log(10);
+        console.log(self.id);
         var doc = parseToDoc(self);
-        return db.post(doc).then(setIdAndRevision);
+        console.log(doc);
+        var putOrPost = self.id ? db.put : db.post;
+        return putOrPost(doc).then(setIdAndRevision).catch(function (err) {
+          console.log(err);
+        });
       },
       isRunning: function () {
         return self.status == "running";
@@ -102,6 +118,8 @@ angular.module("dozeoudez.services")
   Game.load = function (attrs) {
     var game = new Game();
     attrs.startAt = moment(attrs.startAt);
+    attrs.id = attrs._id;
+    attrs.rev = attrs._rev;
     _.extend(game, attrs);
     game.clock = new GameClock(game);
     game.resume();

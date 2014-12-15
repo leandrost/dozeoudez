@@ -17,6 +17,12 @@
     </ion-header-bar>
   </ion-nav-bar>
   <ion-content>
+      <div class="row row-center">
+        <div class="col5">id: {{game.id}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col5">rev: {{game.rev}}</div>
+      </div>
       <div class="row row-center scoreboard">
         <a class="col2 col-33" href="#score" ng-click="openModal(game.homeTeam)">
           <h2>

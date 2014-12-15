@@ -48,9 +48,7 @@ describe("GameClock", function () {
 
       context("when times up", function () {
         beforeEach(function () {
-          console.log(subject.time);
           subject.time = moment.duration(1, "seconds");
-          console.log(subject.time);
         });
 
         it("finishes the game", function () {
