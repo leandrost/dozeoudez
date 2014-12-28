@@ -2,35 +2,33 @@ angular.module("dozeoudez.services")
 
 .factory("GameClock", function($timeout) {
   function GameClock(game) {
+    var defaultTime = moment.duration(10, "seconds");
     var self = this;
+
+    // TODO spec
+    var leftTime = function() {
+      var elapsedTime = game.elapsedTime();
+      if (elapsedTime >= defaultTime.asSeconds()) {
+        return moment.duration(0, "minutes");
+      }
+      return defaultTime.subtract(elapsedTime, "s");
+    };
+
+    self.time = game.startAt ? leftTime() : defaultTime;
+    self.game = game;
+
     var isTimesUp = function () {
       return self.time.asSeconds() <= 0;
     };
 
-    var stopTimerAndFinishGame = function () {
-      game.finish();
-      self.stop();
-    };
-
-    self.time = moment.duration(10, "minutes");
-    self.game = game;
     self.isTimesUp = isTimesUp;
 
-    // TODO spec
-    self.refresh = function() {
-      var elapsedTime = moment().diff(self.game.startAt, "s");
-      if (elapsedTime <= 0) {
-        self.time = moment.duration(0, "minutes");
-      } else {
-        self.time.subtract(elapsedTime, "s");
-      }
-    };
-
     self._tick = function _tick () {
-      self.time = self.time.subtract(1, "s");
       if(isTimesUp()) {
-        stopTimerAndFinishGame();
+        game.finish();
+        return;
       }
+      self.time = self.time.subtract(1, "s");
       self.timer = $timeout(self._tick, 1000); //how to test that ?
     };
 
