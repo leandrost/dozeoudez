@@ -32,7 +32,6 @@ angular.module("dozeoudez.controllers")
 
   // TODO spec
   Game.current().then(function (game) {
-    console.log("current");
     console.log(game);
     if (!game) { return; }
     $scope.game = game;
@@ -53,9 +52,7 @@ angular.module("dozeoudez.controllers")
   };
 
   $scope.score = function (team, points) {
-    if ($scope.game.status != "running") { return ; }
-    team.points += points;
-    $scope.game.save();
+    $scope.game.score(team, points);
     $scope.closeModal();
   };
 

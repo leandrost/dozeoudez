@@ -9,6 +9,8 @@ angular.module("dozeoudez.services")
       finished: "finished"
     };
 
+    var MAX_POINTS = 12;
+
     var self = this;
 
     self.startAt = null;
@@ -19,6 +21,7 @@ angular.module("dozeoudez.services")
     self.clock = new GameClock(self);
 
     var setIdAndRevision = function(response){
+      console.log(response);
       self.id = response.id;
       self._id = response.id;
       self.rev = response.rev;
@@ -29,6 +32,7 @@ angular.module("dozeoudez.services")
       var doc = { _id: obj.id, _rev: obj.rev };
       _.each(obj.dbFields, function(field) {
         var value = obj[field];
+        if (!value) { return; }
         if (moment.isMoment(value)){
           doc[field] = value.format();
         } else {
@@ -43,6 +47,10 @@ angular.module("dozeoudez.services")
         value = value.format();
       }
       return value;
+    };
+
+    var elapsedSecondsFrom = function (time) {
+      return time.diff(self.startAt, "s");
     };
 
     var public = {
@@ -73,6 +81,7 @@ angular.module("dozeoudez.services")
         console.log("pause");
         self.clock.stop();
         self.pausedAt = moment();
+        console.log(self.elapsedTime());
         self.status = STATUSES.paused;
         self.save();
       },
@@ -87,7 +96,9 @@ angular.module("dozeoudez.services")
         console.log("#save");
         var doc = parseToDoc(self);
         var putOrPost = self.id ? db.put : db.post;
-        return putOrPost(doc).then(setIdAndRevision).catch(function (err) {
+        return putOrPost(doc)
+        .then(setIdAndRevision)
+        .catch(function (err) {
           console.log("#save err");
           console.error(err);
           console.log(self);
@@ -99,15 +110,22 @@ angular.module("dozeoudez.services")
       clockTime: function () {
         return moment.utc(self.clock.time.asMilliseconds()).format("mm:ss");
       },
-      // TODO spec
       elapsedTime: function () {
-        var now = moment();
-        var startTime = self.pausedAt || self.startAt;
-        if (!startTime) {
+        if (!self.pausedAt && !self.startAt) {
           return 0;
         }
-        return now.diff(startTime, "s");
-      }
+        var now = moment();
+        return elapsedSecondsFrom(self.pausedAt || now);
+      },
+      score: function (team, points) {
+        if (self.status != "running") { return ; }
+        team.points += points;
+        if (team.points >= MAX_POINTS) {
+          self.finish();
+          return;
+        }
+        self.save();
+      },
     };
 
     _.extend(this, public);
@@ -137,10 +155,11 @@ angular.module("dozeoudez.services")
 
   // TODO spec
   Game.load = function (attrs) {
-    var game = new Game();
     attrs.startAt = moment(attrs.startAt);
+    attrs.pausedAt = moment(attrs.pausedAt);
     attrs.id = attrs._id;
     attrs.rev = attrs._rev;
+    var game = new Game();
     _.extend(game, attrs);
     game.clock = new GameClock(game);
     game.resume();

@@ -48,17 +48,13 @@ describe("GameClock", function () {
 
       context("when times up", function () {
         beforeEach(function () {
-          subject.time = moment.duration(1, "seconds");
+          subject.time = moment.duration(0, "seconds");
         });
 
         it("finishes the game", function () {
+          sinon.stub(game, "finish");
           subject.start();
-          expect(game.status).to.equal("finished");
-        });
-        it("stops the clock", function () {
-          sinon.stub(subject, "stop");
-          subject.start();
-          expect(subject.stop).to.have.been.called;
+          expect(game.finish).to.have.been.called;
         });
       });
     });

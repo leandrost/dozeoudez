@@ -2,7 +2,7 @@ angular.module("dozeoudez.services")
 
 .factory("GameClock", function($timeout) {
   function GameClock(game) {
-    var defaultTime = moment.duration(10, "seconds");
+    var defaultTime = moment.duration(10, "minutes");
     var self = this;
 
     // TODO spec

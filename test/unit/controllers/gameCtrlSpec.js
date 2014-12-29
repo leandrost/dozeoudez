@@ -101,26 +101,4 @@ describe(Controller, function () {
       });
     });
 
-    describe("$watch()", function () {
-      beforeEach(function () {
-        $scope.game.finish = sinon.spy();
-      });
-
-      context("when a team has 12 points", function () {
-        it("sets the game status to finished", function () {
-          $scope.game.homeTeam.points = 12;
-          $scope.$digest();
-          expect($scope.game.finish).to.have.been.called;
-        });
-      });
-
-      context("when a team has more than 12 points", function () {
-        it("sets the game status to finished", function () {
-          $scope.game.awayTeam.points = 13;
-          $scope.$digest();
-          expect($scope.game.finish).to.have.been.called;
-        });
-      });
-    });
-
 });

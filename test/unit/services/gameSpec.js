@@ -1,14 +1,16 @@
 /*jshint expr:true */
 describe("Game", function () {
 
-    var model, subject, db;
+    var model, subject, db, fakePromise;
 
     beforeEach(function () {
       module("dozeoudez");
       module("dozeoudez.services", function ($provide) {
         db = sinon.stub();
-        var fakePromise = sinon.stub({ then: function () { } });
-        db.post = sinon.stub().returns(fakePromise);
+        fakePromise = {};
+        var catchObj = { catch: function () { return fakePromise; } };
+        var thenObj = { then: function () { return catchObj; } };
+        db.post = sinon.stub().returns(thenObj);
         $provide.value("db", db);
       });
 
@@ -63,7 +65,7 @@ describe("Game", function () {
       });
 
     });
-  
+
     describe("#pause()", function () {
       beforeEach(function () {
         subject.clock.stop = sinon.stub();
@@ -111,13 +113,6 @@ describe("Game", function () {
     });
 
     describe("#save()", function () {
-      var fakePromise;
-
-      beforeEach(function () {
-        fakePromise = sinon.stub();
-        fakePromise.then = sinon.stub().returns(fakePromise);
-        db.post = sinon.stub().returns(fakePromise);
-      });
 
       it("persists a game db fields on database", function () {
         subject.status = "running";
@@ -134,17 +129,9 @@ describe("Game", function () {
           awayTeam: { points: 2 }
         });
       });
-      
+
       it("returns a promise ", function () {
         expect(subject.save()).to.equal(fakePromise);
-      });
-
-      xit("sets id and revision", function () {
-        subject.id = undefined;
-        subject.rev = undefined;
-        subject.save();
-        expect(subject.id).to.equal("fake-id");
-        expect(subject.rev).to.equal("fake-rev");
       });
     });
 
@@ -165,8 +152,8 @@ describe("Game", function () {
       });
 
       context("when game is running and times up", function () {
-        it("finish the game", function () {
-          var freezedMoment = moment("2014-10-18 17:30", "YYYY-MM-DD HH:mm");
+        it("finishes the game", function () {
+          var freezedMoment = moment("2014-10-18 19:30", "YYYY-MM-DD HH:mm");
           sinon.useFakeTimers(freezedMoment.toDate().getTime());
           var subject = model.load({ status: "running", startAt: "2014-10-18T18:45:02" });
           expect(subject.status).to.equal("finished");
@@ -181,5 +168,88 @@ describe("Game", function () {
         expect(clockTime).to.equal("07:02");
       });
     });
+
+    describe("#elapsedTime", function () {
+      it("returns diff in seconds from the current time", function () {
+        var freezedMoment = moment("2014-12-23T18:00:20");
+        sinon.useFakeTimers(freezedMoment.toDate().getTime());
+        subject.startAt = moment("2014-12-23T18:00:00");
+        expect(subject.elapsedTime()).to.eq(20);
+      });
+      context("when game is paused", function () {
+        it("returns diff in seconds from the start time", function () {
+          var freezedMoment = moment("2014-12-23T18:00:40");
+          sinon.useFakeTimers(freezedMoment.toDate().getTime());
+          subject.startAt = moment("2014-12-23T18:00:00");
+          subject.pausedAt = moment("2014-12-23T18:00:35");
+          expect(subject.elapsedTime()).to.eq(35);
+        });
+      });
+
+      context("when game has not started", function () {
+        it("returns zero", function () {
+          subject.startAt = null;
+          subject.pausedAt = undefined;
+          expect(subject.elapsedTime()).to.eq(0);
+        });
+      });
+    });
+
+    describe("#score()", function () {
+      beforeEach(function () {
+        subject.status = "running";
+      });
+
+      it("adds points to a team", function () {
+        var team = { points: 3 };
+        subject.score(team, 2);
+        expect(team.points).to.equal(5);
+      });
+
+      context("when game is paused", function () {
+        beforeEach(function () {
+          subject.status = "paused";
+        });
+
+        it("does not change number of points made by a team", function () {
+          var team = { points: 3 };
+          subject.score(team, 3);
+          expect(team.points).to.equal(3);
+        });
+      });
+
+      context("when game is finished", function () {
+        beforeEach(function () {
+          subject.status = "finished";
+        });
+
+        it("does not change number of points made by a team", function () {
+          var team = { points: 10 };
+          subject.score(team, 3);
+          expect(team.points).to.equal(10);
+        });
+      });
+
+      context("when the team has 12 points", function () {
+        it("finishes the game", function () {
+          var team = subject.homeTeam
+          team.points = 10;
+          subject.finish = sinon.stub();
+          subject.score(team, 2);
+          expect(subject.finish).to.have.been.called;
+        });
+      });
+
+      context("when the team has more than 12 points", function () {
+        it("finishes the game", function () {
+          var team = subject.awayTeam;
+          team.points = 10;
+          subject.finish = sinon.stub();
+          subject.score(team, 3);
+          expect(subject.finish).to.have.been.called;
+        });
+      });
+    });
+
 
 });
