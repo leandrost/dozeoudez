@@ -1,11 +1,11 @@
 angular.module("dozeoudez.services")
 
 .factory("GameClock", function($timeout) {
-  function GameClock(game) {
-    var defaultTime = moment.duration(10, "minutes");
+  function GameClock(game, attrs) {
     var self = this;
+    var defaultTime = moment.duration(10, "minutes");
+    attrs = attrs || {};
 
-    // TODO spec
     var leftTime = function() {
       var elapsedTime = game.elapsedTime();
       if (elapsedTime >= defaultTime.asSeconds()) {
@@ -14,7 +14,9 @@ angular.module("dozeoudez.services")
       return defaultTime.subtract(elapsedTime, "s");
     };
 
-    self.time = game.startAt ? leftTime() : defaultTime;
+    var time = moment.duration(attrs.time || { minutes: 10 });
+    console.log(game);
+    self.time = game.isRunning() ? leftTime() : time;
     self.game = game;
 
     var isTimesUp = function () {
@@ -38,6 +40,15 @@ angular.module("dozeoudez.services")
 
     self.stop = function () {
       $timeout.cancel(self.timer);
+    };
+
+    self.toString = function () {
+      var ms = self.time.asMilliseconds();
+      return moment(ms).format("mm:ss");
+    };
+
+    self.toJSON = function () {
+      return { time:  "00:" + self.toString() };
     };
 
   }

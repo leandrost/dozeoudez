@@ -2,6 +2,7 @@ angular.module("dozeoudez.services")
 
 .factory("Game", function(GameClock, db) {
   function Game() {
+    var self = this;
 
     var STATUSES = {
       paused: "paused",
@@ -11,14 +12,14 @@ angular.module("dozeoudez.services")
 
     var MAX_POINTS = 12;
 
-    var self = this;
-
-    self.startAt = null;
-    self.finishedAt = null;
-    self.status = STATUSES.paused;
-    self.homeTeam = { points: 0 };
-    self.awayTeam = { points: 0 };
-    self.clock = new GameClock(self);
+    function init() {
+      self.startAt = null;
+      self.finishedAt = null;
+      self.status = STATUSES.paused;
+      self.homeTeam = { points: 0 };
+      self.awayTeam = { points: 0 };
+      self.clock = new GameClock(self);
+    };
 
     var setIdAndRevision = function(response){
       console.log(response);
@@ -26,20 +27,6 @@ angular.module("dozeoudez.services")
       self._id = response.id;
       self.rev = response.rev;
       self._rev = response.rev;
-    };
-
-    var parseToDoc = function (obj) {
-      var doc = { _id: obj.id, _rev: obj.rev };
-      _.each(obj.dbFields, function(field) {
-        var value = obj[field];
-        if (!value) { return; }
-        if (moment.isMoment(value)){
-          doc[field] = value.format();
-        } else {
-          doc[field] = value;
-        }
-      });
-      return doc;
     };
 
     var parseType = function (value) {
@@ -54,7 +41,30 @@ angular.module("dozeoudez.services")
     };
 
     var public = {
-      dbFields: ["status", "startAt", "pausedAt", "finishedAt", "homeTeam", "awayTeam"],
+      dbFields: [
+        "status",
+        "startAt",
+        "pausedAt",
+        "finishedAt",
+        "homeTeam",
+        "clock",
+        "awayTeam"
+      ],
+      toJSON: function () {
+        var doc = { _id: self.id, _rev: self.rev };
+        _.each(self.dbFields, function(field) {
+          var value = self[field];
+          if (!value) { return; }
+          if (value.toJSON){
+            doc[field] = value.toJSON();
+          } else if (moment.isMoment(value)){
+            doc[field] = value.format();
+          } else {
+            doc[field] = value;
+          }
+        });
+        return doc;
+      },
       play: function () {
         self.clock.start();
         self.status = STATUSES.running;
@@ -81,7 +91,6 @@ angular.module("dozeoudez.services")
         console.log("pause");
         self.clock.stop();
         self.pausedAt = moment();
-        console.log(self.elapsedTime());
         self.status = STATUSES.paused;
         self.save();
       },
@@ -94,9 +103,9 @@ angular.module("dozeoudez.services")
       },
       save: function () {
         console.log("#save");
-        var doc = parseToDoc(self);
         var putOrPost = self.id ? db.put : db.post;
-        return putOrPost(doc)
+        var obj = self.toJSON();
+        return putOrPost(obj)
         .then(setIdAndRevision)
         .catch(function (err) {
           console.log("#save err");
@@ -129,6 +138,7 @@ angular.module("dozeoudez.services")
     };
 
     _.extend(this, public);
+    init();
 
     return this;
   }
@@ -161,7 +171,7 @@ angular.module("dozeoudez.services")
     attrs.rev = attrs._rev;
     var game = new Game();
     _.extend(game, attrs);
-    game.clock = new GameClock(game);
+    game.clock = new GameClock(game, attrs.clock);
     game.resume();
     return game;
   };

@@ -87,6 +87,7 @@ describe("Game", function () {
         subject.pause();
         expect(subject.save).to.have.been.called;
       });
+
     });
 
     describe("#finish()", function () {
@@ -120,14 +121,7 @@ describe("Game", function () {
         subject.homeTeam = { points: 7 };
         subject.awayTeam = { points: 2 };
         subject.save();
-        expect(db.post).to.have.been.calledWith({
-          _id: subject.id,
-          _rev: subject.rev,
-          status: "running",
-          startAt: "2014-09-10T20:30:00+03:00",
-          homeTeam: { points: 7 },
-          awayTeam: { points: 2 }
-        });
+        expect(db.post).to.have.been.calledWith(subject.toJSON());
       });
 
       it("returns a promise ", function () {
@@ -169,32 +163,6 @@ describe("Game", function () {
       });
     });
 
-    describe("#elapsedTime", function () {
-      it("returns diff in seconds from the current time", function () {
-        var freezedMoment = moment("2014-12-23T18:00:20");
-        sinon.useFakeTimers(freezedMoment.toDate().getTime());
-        subject.startAt = moment("2014-12-23T18:00:00");
-        expect(subject.elapsedTime()).to.eq(20);
-      });
-      context("when game is paused", function () {
-        it("returns diff in seconds from the start time", function () {
-          var freezedMoment = moment("2014-12-23T18:00:40");
-          sinon.useFakeTimers(freezedMoment.toDate().getTime());
-          subject.startAt = moment("2014-12-23T18:00:00");
-          subject.pausedAt = moment("2014-12-23T18:00:35");
-          expect(subject.elapsedTime()).to.eq(35);
-        });
-      });
-
-      context("when game has not started", function () {
-        it("returns zero", function () {
-          subject.startAt = null;
-          subject.pausedAt = undefined;
-          expect(subject.elapsedTime()).to.eq(0);
-        });
-      });
-    });
-
     describe("#score()", function () {
       beforeEach(function () {
         subject.status = "running";
@@ -232,7 +200,7 @@ describe("Game", function () {
 
       context("when the team has 12 points", function () {
         it("finishes the game", function () {
-          var team = subject.homeTeam
+          var team = subject.homeTeam;
           team.points = 10;
           subject.finish = sinon.stub();
           subject.score(team, 2);
@@ -251,5 +219,8 @@ describe("Game", function () {
       });
     });
 
+    describe("#toJSON", function () {
+      
+    });
 
 });

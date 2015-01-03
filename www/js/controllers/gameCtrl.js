@@ -33,6 +33,8 @@ angular.module("dozeoudez.controllers")
   // TODO spec
   Game.current().then(function (game) {
     console.log(game);
+    console.log(game.toJSON());
+    console.log(game.clock.toJSON());
     if (!game) { return; }
     $scope.game = game;
   });
