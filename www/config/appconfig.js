@@ -16,5 +16,5 @@ var environments = {
   production: { },
 };
 
-AppConfig = environments[ENV.name];
+AppConfig = environments[ENV.APP_ENV || "development"];
 

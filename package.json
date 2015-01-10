@@ -8,7 +8,7 @@
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
     "gulp-rename": "^1.2.0",
-    "weinre": "~2.0.0-pre-I0Z7U9OV"
+    "ionic": "~1.3.0"
   },
   "devDependencies": {
     "bower": "^1.3.3",
@@ -22,10 +22,18 @@
     "karma-phantomjs-launcher": "~0.1.4",
     "karma-sinon-chai": "~0.2.0",
     "mocha": "~2.0.0",
-    "shelljs": "^0.3.0"
+    "shelljs": "^0.3.0",
+    "weinre": "~2.0.0-pre-I0Z7U9OV"
   },
   "scripts": {
+    "android": "APP_ENV=sandbox npm run build-env && npm run ionic-run-android",
+    "build-env": "node scripts/build-env.js",
+    "ionic-run-android": "node_modules/.bin/ionic run android",
+    "ionic-serve": "node_modules/.bin/ionic serve",
     "postinstall": "node_modules/.bin/bower install",
-    "test": "node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
+    "remote-debug": "node_modules/.bin/weinre --boundHost $LOCAL_IP",
+    "start": "npm run build-env && npm run ionic-serve",
+    "test": "node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
+    "watch-test": "node_modules/karma/bin/karma start --browsers PhantomJS"
   }
 }
