@@ -1,7 +1,7 @@
 angular.module("dozeoudez.services")
 
 .factory("Game", function(GameClock, db) {
-  function Game() {
+  function Game(attrs) {
     var self = this;
 
     var STATUSES = {
@@ -13,16 +13,10 @@ angular.module("dozeoudez.services")
     var MAX_POINTS = 12;
 
     function init() {
-      self.startAt = null;
-      self.finishedAt = null;
-      self.status = STATUSES.paused;
-      self.homeTeam = { points: 0 };
-      self.awayTeam = { points: 0 };
-      self.clock = new GameClock(self);
-    };
+      db.load("Game", self, attrs);
+    }
 
     var setIdAndRevision = function(response){
-      console.log(response);
       self.id = response.id;
       self._id = response.id;
       self.rev = response.rev;
@@ -46,6 +40,7 @@ angular.module("dozeoudez.services")
         "startAt",
         "pausedAt",
         "finishedAt",
+        "resumedAt",
         "homeTeam",
         "clock",
         "awayTeam"
@@ -79,6 +74,7 @@ angular.module("dozeoudez.services")
       },
       resume: function () {
         console.log("resume");
+        self.resumedAt = moment();
         if (self.isRunning()) {
           if (self.clock.isTimesUp()) {
             self.finish();
@@ -101,11 +97,14 @@ angular.module("dozeoudez.services")
         self.status = STATUSES.finished;
         self.save();
       },
+      _save: function (obj) {
+        var putOrPost = self.id ? db.put : db.post;
+        return putOrPost(obj);
+      },
       save: function () {
         console.log("#save");
-        var putOrPost = self.id ? db.put : db.post;
         var obj = self.toJSON();
-        return putOrPost(obj)
+        return self._save(obj)
         .then(setIdAndRevision)
         .catch(function (err) {
           console.log("#save err");
@@ -116,15 +115,13 @@ angular.module("dozeoudez.services")
       isRunning: function () {
         return self.status == "running";
       },
-      clockTime: function () {
-        return moment.utc(self.clock.time.asMilliseconds()).format("mm:ss");
-      },
       elapsedTime: function () {
         if (!self.pausedAt && !self.startAt) {
           return 0;
         }
         var now = moment();
-        return elapsedSecondsFrom(self.pausedAt || now);
+        var s =  now.diff(self.resumedAt, "s");
+        return elapsedSecondsFrom(self.pausedAt || now) + s;
       },
       score: function (team, points) {
         if (self.status != "running") { return ; }
@@ -163,7 +160,6 @@ angular.module("dozeoudez.services")
                    ).then(returnGame);
   };
 
-  // TODO spec
   Game.load = function (attrs) {
     attrs.startAt = moment(attrs.startAt);
     attrs.pausedAt = moment(attrs.pausedAt);

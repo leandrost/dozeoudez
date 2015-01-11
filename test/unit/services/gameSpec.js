@@ -5,19 +5,15 @@ describe("Game", function () {
 
     beforeEach(function () {
       module("dozeoudez");
-      module("dozeoudez.services", function ($provide) {
-        db = sinon.stub();
-        fakePromise = {};
-        var catchObj = { catch: function () { return fakePromise; } };
-        var thenObj = { then: function () { return catchObj; } };
-        db.post = sinon.stub().returns(thenObj);
-        $provide.value("db", db);
-      });
 
       inject(function(Game) {
         model = Game;
         subject = new Game();
         subject.clock.start = sinon.stub();
+        fakePromise = {};
+        var catchObj = { catch: function () { return fakePromise; } };
+        var thenObj = { then: function () { return catchObj; } };
+        subject._save = sinon.stub().returns(thenObj);
       });
     });
 
@@ -34,6 +30,24 @@ describe("Game", function () {
       it("#awayTeam points is zero", function () {
         expect(subject.awayTeam.points).to.equal(0);
       });
+
+      context("with attributes", function () {
+        it("assigns attributes", function () {
+          var fields = {
+            status: "finished",
+            homeTeam: { points: 10 },
+          };
+          var subject = new model(fields);
+          expect(subject.status).to.equal("finished");
+          expect(subject.homeTeam).to.deep.equal({ points: 10 });
+        });
+        it("assigns a date field as moment", function () {
+          var subject = new model({ startAt: "2014-10-18T18:45:02" });
+          var startAtMoment = moment("2014-10-18T18:45:02");
+          expect(subject.startAt.format()).to.deep.equal(startAtMoment.format());
+        });
+      });
+
     });
 
     describe("#start()", function () {
@@ -115,13 +129,21 @@ describe("Game", function () {
 
     describe("#save()", function () {
 
-      it("persists a game db fields on database", function () {
+      beforeEach(function () {
+        subject.db = sinon.stub();
+        fakePromise = {};
+        var catchObj = { catch: function () { return fakePromise; } };
+        var thenObj = { then: function () { return catchObj; } };
+        subject.db.post = sinon.stub().returns(thenObj);
+      });
+
+      it("persists a game db fields onn database", function () {
         subject.status = "running";
         subject.startAt = moment.parseZone("2014-09-10T20:30:00.000+03:00");
         subject.homeTeam = { points: 7 };
         subject.awayTeam = { points: 2 };
         subject.save();
-        expect(db.post).to.have.been.calledWith(subject.toJSON());
+        expect(subject._save).to.have.been.calledWith(subject.toJSON());
       });
 
       it("returns a promise ", function () {
@@ -152,14 +174,6 @@ describe("Game", function () {
           var subject = model.load({ status: "running", startAt: "2014-10-18T18:45:02" });
           expect(subject.status).to.equal("finished");
         });
-      });
-    });
-
-    describe("#clockTime()", function () {
-      it("returns clock.time formated", function () {
-        subject.clock.time = moment.duration({ minutes: 7, seconds: 2 });
-        var clockTime = subject.clockTime();
-        expect(clockTime).to.equal("07:02");
       });
     });
 
@@ -219,8 +233,51 @@ describe("Game", function () {
       });
     });
 
-    describe("#toJSON", function () {
-      
+    describe("#elapsedTime", function () {
+      it("returns diff in seconds from the current time", function () {
+        var freezedMoment = moment("2014-12-23T18:00:20");
+        sinon.useFakeTimers(freezedMoment.toDate().getTime());
+        subject.startAt = moment("2014-12-23T18:00:00");
+        expect(subject.elapsedTime()).to.eq(20);
+      });
+      context("when game is paused", function () {
+        it("returns diff in seconds from the start time", function () {
+          var freezedMoment = moment("2014-12-23T18:00:40");
+          sinon.useFakeTimers(freezedMoment.toDate().getTime());
+          subject.startAt = moment("2014-12-23T18:00:00");
+          subject.pausedAt = moment("2014-12-23T18:00:35");
+          expect(subject.elapsedTime()).to.eq(35);
+        });
+      });
+
+      context("when game has not started", function () {
+        it("returns zero", function () {
+          subject.startAt = null;
+          subject.pausedAt = undefined;
+          expect(subject.elapsedTime()).to.eq(0);
+        });
+      });
+
+      context("when game is running", function () {
+        it("returns diff in seconds from the resumed time", function () {
+          var freezedMoment = moment("2014-12-23T18:00:40");
+          sinon.useFakeTimers(freezedMoment.toDate().getTime());
+          subject.status = "running";
+          subject.startAt = moment("2014-12-23T18:00:00");
+          subject.pausedAt = moment("2014-12-23T18:00:25");
+          subject.resumedAt = moment("2014-12-23T18:00:35");
+          expect(subject.elapsedTime()).to.eq(30);
+        });
+      });
+    });
+
+    describe("#resume", function () {
+      it("sets resumedAt with current momment", function () {
+        var now = moment();
+        sinon.useFakeTimers(now.toDate().getTime());
+        subject.resume();
+        expect(subject.resumedAt.toDate()).to.deep.equal(now.toDate());
+      });
     });
 
 });

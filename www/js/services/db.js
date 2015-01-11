@@ -1,9 +1,13 @@
 angular.module("dozeoudez.services")
 
-.factory("db", function (AppConfig, pouchdb, $window) {
-  var db = pouchdb.create("dozeoudez");
+.factory("db", function (pouchdb, $window, $injector) {
+  var config = AppConfig.database;
+  var dbName = config.name;
+  var dbSyncURL = config.host + ":" + config.port + "/" + dbName;
+  var db = pouchdb.create(dbName);
+  PouchDB.sync(dbName, dbSyncURL, {live: true, retry: true});
+
   $window.db = db;
-  PouchDB.sync("dozeoudez", AppConfig.dbHost + AppConfig.database, {live: true, retry: true});
 
   var schemas = {
     "Game": {
@@ -28,21 +32,29 @@ angular.module("dozeoudez.services")
     obj.id = attrs._id || null;
     obj.rev = attrs._rev || null;
     loadAttributes(schema, obj, attrs);
-    //loadAssociations(schema, obj, attrs);
+    loadAssociations(schema, obj, attrs);
   };
 
   var loadAttributes = function (schema, obj, attrs) {
-    _.each(schema.attributes, function (attribute) {
-      console.log(attribute);
-      obj[attribute] = parseAttribute(attribute, attrs[attribute]);
+    _.forIn(schema.attributes, function (schema, field) {
+      console.log(field);
+      console.log(attrs[field]);
+      obj[field] = parseAttribute(schema, attrs[field]);
     });
   };
 
   var parseAttribute = function (schema, value) {
     if (schema.type == "Moment") {
-      value = moment(value);
+      value = value ? moment(value) : schema.default;
     }
     return value || schema.default;
+  };
+
+  var loadAssociations = function (schema, obj, attrs) {
+    _.forIn(schema.associations, function (schema, field) {
+      var assoc = $injector.get("GameClock");
+      obj[field] = new assoc(obj, attrs[field]);
+    });
   };
 
   return db;

@@ -31,6 +31,8 @@ module.exports = function(config) {
       'www/lib/angular-ui-router/release/angular-ui-router.js',
       'www/lib/ionic/js/ionic.js',
       'www/lib/ionic/js/ionic-angular.min.js',
+      'www/config/env.js',
+      'www/config/appconfig.js',
       'www/js/modules.js',
       'www/js/app.js',
       'www/js/**/*.js',

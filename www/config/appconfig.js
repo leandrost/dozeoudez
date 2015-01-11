@@ -6,6 +6,13 @@ var environments = {
       name: "dozeoudez",
     },
   },
+  test: {
+    database: {
+      host: "http://localhost",
+      port: "5984",
+      name: "dozeoudez-test",
+    },
+  },
   sandbox: {
     database: {
       host: "http://" + ENV.LOCAL_IP,

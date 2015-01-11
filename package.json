@@ -33,7 +33,7 @@
     "postinstall": "node_modules/.bin/bower install",
     "remote-debug": "node_modules/.bin/weinre --boundHost $LOCAL_IP",
     "start": "npm run build-env && npm run ionic-serve",
-    "test": "node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
-    "watch-test": "node_modules/karma/bin/karma start --browsers PhantomJS"
+    "test": "APP_ENV=test npm run build-env && node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
+    "watch-test": "APP_ENV=test npm run build-env && node_modules/karma/bin/karma start --browsers PhantomJS"
   }
 }
