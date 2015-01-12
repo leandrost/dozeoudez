@@ -37,8 +37,6 @@ angular.module("dozeoudez.services")
 
   var loadAttributes = function (schema, obj, attrs) {
     _.forIn(schema.attributes, function (schema, field) {
-      console.log(field);
-      console.log(attrs[field]);
       obj[field] = parseAttribute(schema, attrs[field]);
     });
   };

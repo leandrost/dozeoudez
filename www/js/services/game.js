@@ -73,7 +73,6 @@ angular.module("dozeoudez.services")
         self.save();
       },
       resume: function () {
-        console.log("resume");
         self.resumedAt = moment();
         if (self.isRunning()) {
           if (self.clock.isTimesUp()) {
@@ -116,12 +115,16 @@ angular.module("dozeoudez.services")
         return self.status == "running";
       },
       elapsedTime: function () {
+        console.log("#elapsedTime");
         if (!self.pausedAt && !self.startAt) {
           return 0;
         }
         var now = moment();
-        var s =  now.diff(self.resumedAt, "s");
-        return elapsedSecondsFrom(self.pausedAt || now) + s;
+        var s =  now.diff(self.resumedAt || self.startAt, "s");
+        if (self.status == "paused") {
+          return elapsedSecondsFrom(self.pausedAt);
+        }
+        return s;
       },
       score: function (team, points) {
         if (self.status != "running") { return ; }
@@ -152,24 +155,12 @@ angular.module("dozeoudez.services")
       if (response.rows.length === 0) {
         return null;
       }
-      return Game.load(response.rows[0].doc);
+      return new Game(response.rows[0].doc);
     };
 
     return db.query(lastGame,
                     { descending: true, limit: 1, include_docs: true }
                    ).then(returnGame);
-  };
-
-  Game.load = function (attrs) {
-    attrs.startAt = moment(attrs.startAt);
-    attrs.pausedAt = moment(attrs.pausedAt);
-    attrs.id = attrs._id;
-    attrs.rev = attrs._rev;
-    var game = new Game();
-    _.extend(game, attrs);
-    game.clock = new GameClock(game, attrs.clock);
-    game.resume();
-    return game;
   };
 
   return Game;

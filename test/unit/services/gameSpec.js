@@ -46,6 +46,7 @@ describe("Game", function () {
           var startAtMoment = moment("2014-10-18T18:45:02");
           expect(subject.startAt.format()).to.deep.equal(startAtMoment.format());
         });
+
       });
 
     });
@@ -152,29 +153,6 @@ describe("Game", function () {
     });
 
     describe("#load()", function () {
-      it("assigns attributes", function () {
-        var fields = {
-          status: "finished",
-          homeTeam: { points: 10 },
-        };
-        var game = model.load(fields);
-        expect(game.status).to.equal("finished");
-        expect(game.homeTeam).to.deep.equal({ points: 10 });
-      });
-      it("assigns a date field as moment", function () {
-        var subject = model.load({ startAt: "2014-10-18T18:45:02" });
-        var startAtMoment = moment("2014-10-18T18:45:02");
-        expect(subject.startAt.format()).to.deep.equal(startAtMoment.format());
-      });
-
-      context("when game is running and times up", function () {
-        it("finishes the game", function () {
-          var freezedMoment = moment("2014-10-18 19:30", "YYYY-MM-DD HH:mm");
-          sinon.useFakeTimers(freezedMoment.toDate().getTime());
-          var subject = model.load({ status: "running", startAt: "2014-10-18T18:45:02" });
-          expect(subject.status).to.equal("finished");
-        });
-      });
     });
 
     describe("#score()", function () {
@@ -234,12 +212,15 @@ describe("Game", function () {
     });
 
     describe("#elapsedTime", function () {
-      it("returns diff in seconds from the current time", function () {
-        var freezedMoment = moment("2014-12-23T18:00:20");
-        sinon.useFakeTimers(freezedMoment.toDate().getTime());
-        subject.startAt = moment("2014-12-23T18:00:00");
-        expect(subject.elapsedTime()).to.eq(20);
+
+      context("when game has not started", function () {
+        it("returns zero", function () {
+          subject.startAt = null;
+          subject.pausedAt = undefined;
+          expect(subject.elapsedTime()).to.eq(0);
+        });
       });
+
       context("when game is paused", function () {
         it("returns diff in seconds from the start time", function () {
           var freezedMoment = moment("2014-12-23T18:00:40");
@@ -250,15 +231,19 @@ describe("Game", function () {
         });
       });
 
-      context("when game has not started", function () {
-        it("returns zero", function () {
-          subject.startAt = null;
-          subject.pausedAt = undefined;
-          expect(subject.elapsedTime()).to.eq(0);
+      context("when game has no pauses", function () {
+        it("returns diff in seconds from the current time", function () {
+          var freezedMoment = moment("2014-12-23T18:00:20");
+          sinon.useFakeTimers(freezedMoment.toDate().getTime());
+          subject.status = "running";
+          subject.startAt = moment("2014-12-23T18:00:00");
+          subject.pausedAt = null;
+          subject.resumedAt = null;
+          expect(subject.elapsedTime()).to.eq(20);
         });
       });
 
-      context("when game is running", function () {
+      context("when game was paused", function () {
         it("returns diff in seconds from the resumed time", function () {
           var freezedMoment = moment("2014-12-23T18:00:40");
           sinon.useFakeTimers(freezedMoment.toDate().getTime());
@@ -266,6 +251,14 @@ describe("Game", function () {
           subject.startAt = moment("2014-12-23T18:00:00");
           subject.pausedAt = moment("2014-12-23T18:00:25");
           subject.resumedAt = moment("2014-12-23T18:00:35");
+          var attrs = {
+            status: "running",
+            startAt: "2014-12-23T18:00:00",
+            pausedAt: "2014-12-23T18:00:25",
+            resumedAt: "2014-12-23T18:00:35",
+            clock: { time: "00:09:35" },
+          };
+          subject = new model(attrs);
           expect(subject.elapsedTime()).to.eq(30);
         });
       });
@@ -277,6 +270,16 @@ describe("Game", function () {
         sinon.useFakeTimers(now.toDate().getTime());
         subject.resume();
         expect(subject.resumedAt.toDate()).to.deep.equal(now.toDate());
+      });
+
+      context("when game is running and times up", function () {
+        it("finishes the game", function () {
+          var freezedMoment = moment("2014-10-18 19:30", "YYYY-MM-DD HH:mm");
+          sinon.useFakeTimers(freezedMoment.toDate().getTime());
+          var subject = new model({ status: "running", startAt: "2014-10-18T18:45:02" });
+          subject.resume();
+          expect(subject.status).to.equal("finished");
+        });
       });
     });
 
