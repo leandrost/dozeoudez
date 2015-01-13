@@ -61,6 +61,10 @@ angular.module("dozeoudez.services")
         return doc;
       },
       play: function () {
+        if (self.clock.isTimesUp()) {
+          self.finish();
+          return;
+        }
         self.clock.start();
         self.status = STATUSES.running;
       },
@@ -73,14 +77,11 @@ angular.module("dozeoudez.services")
         self.save();
       },
       resume: function () {
-        self.resumedAt = moment();
         if (self.isRunning()) {
-          if (self.clock.isTimesUp()) {
-            self.finish();
-          } else {
-            self.play();
-          }
+          self.refreshClock();
+          self.play();
         }
+        self.resumedAt = moment();
       },
       pause: function () {
         console.log("pause");
@@ -114,17 +115,15 @@ angular.module("dozeoudez.services")
       isRunning: function () {
         return self.status == "running";
       },
-      elapsedTime: function () {
-        console.log("#elapsedTime");
-        if (!self.pausedAt && !self.startAt) {
-          return 0;
-        }
+      refreshClock: function () {
         var now = moment();
-        var s =  now.diff(self.resumedAt || self.startAt, "s");
-        if (self.status == "paused") {
-          return elapsedSecondsFrom(self.pausedAt);
-        }
-        return s;
+        var time =  self.resumedAt || self.startAt;
+        var diffFromStart = now.diff(time, "s");
+        console.log(0);
+        console.log(self.resumedAt.toDate());
+        console.log(now.toDate());
+        console.log(diffFromStart);
+        self.clock.time.subtract(diffFromStart, "s");
       },
       score: function (team, points) {
         if (self.status != "running") { return ; }

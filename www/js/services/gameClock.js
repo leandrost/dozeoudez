@@ -6,17 +6,8 @@ angular.module("dozeoudez.services")
     var defaultTime = moment.duration(10, "minutes");
     attrs = attrs || {};
 
-    var leftTime = function() {
-      var elapsedTime = game.elapsedTime();
-      if (elapsedTime >= defaultTime.asSeconds()) {
-        return moment.duration(0, "minutes");
-      }
-      return defaultTime.subtract(elapsedTime, "s");
-    };
-
     var time = moment.duration(attrs.time || { minutes: 10 });
-    console.log(game);
-    self.time = game.isRunning() ? leftTime() : time;
+    self.time = time;
     self.game = game;
 
     var isTimesUp = function () {

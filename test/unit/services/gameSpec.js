@@ -152,9 +152,6 @@ describe("Game", function () {
       });
     });
 
-    describe("#load()", function () {
-    });
-
     describe("#score()", function () {
       beforeEach(function () {
         subject.status = "running";
@@ -211,60 +208,38 @@ describe("Game", function () {
       });
     });
 
-    describe("#elapsedTime", function () {
-
-      context("when game has not started", function () {
-        it("returns zero", function () {
-          subject.startAt = null;
-          subject.pausedAt = undefined;
-          expect(subject.elapsedTime()).to.eq(0);
-        });
-      });
-
-      context("when game is paused", function () {
-        it("returns diff in seconds from the start time", function () {
-          var freezedMoment = moment("2014-12-23T18:00:40");
-          sinon.useFakeTimers(freezedMoment.toDate().getTime());
-          subject.startAt = moment("2014-12-23T18:00:00");
-          subject.pausedAt = moment("2014-12-23T18:00:35");
-          expect(subject.elapsedTime()).to.eq(35);
-        });
-      });
-
-      context("when game has no pauses", function () {
-        it("returns diff in seconds from the current time", function () {
-          var freezedMoment = moment("2014-12-23T18:00:20");
-          sinon.useFakeTimers(freezedMoment.toDate().getTime());
-          subject.status = "running";
-          subject.startAt = moment("2014-12-23T18:00:00");
-          subject.pausedAt = null;
-          subject.resumedAt = null;
-          expect(subject.elapsedTime()).to.eq(20);
-        });
+    describe("#resume", function () {
+      it("refreshs the clock time from start time", function () {
+        var freezedMoment = moment("2014-10-18 19:30:00", "YYYY-MM-DD HH:mm");
+        sinon.useFakeTimers(freezedMoment.toDate().getTime());
+        var attrs = {
+          status: "running",
+          clock: { time: "00:09:59"},
+          startAt: "2014-10-18 19:27:41",
+        };
+        subject.play = sinon.stub();
+        subject = new model(attrs);
+        subject.resume();
+        expect(subject.clock.toString()).to.equal("07:39");
       });
 
       context("when game was paused", function () {
-        it("returns diff in seconds from the resumed time", function () {
-          var freezedMoment = moment("2014-12-23T18:00:40");
+        it.only("refreshs the clock time from resume time", function () {
+          var freezedMoment = moment("2014-10-18 19:30:00", "YYYY-MM-DD HH:mm");
           sinon.useFakeTimers(freezedMoment.toDate().getTime());
-          subject.status = "running";
-          subject.startAt = moment("2014-12-23T18:00:00");
-          subject.pausedAt = moment("2014-12-23T18:00:25");
-          subject.resumedAt = moment("2014-12-23T18:00:35");
           var attrs = {
             status: "running",
-            startAt: "2014-12-23T18:00:00",
-            pausedAt: "2014-12-23T18:00:25",
-            resumedAt: "2014-12-23T18:00:35",
-            clock: { time: "00:09:35" },
+            clock: { time: "00:09:50"},
+            startAt: "2014-10-18 19:27:41",
+            resumedAt: "2014-10-18 19:29:00",
           };
+          subject.play = sinon.stub();
           subject = new model(attrs);
-          expect(subject.elapsedTime()).to.eq(30);
+          subject.resume();
+          expect(subject.clock.toString()).to.equal("08:50");
         });
       });
-    });
 
-    describe("#resume", function () {
       it("sets resumedAt with current momment", function () {
         var now = moment();
         sinon.useFakeTimers(now.toDate().getTime());
@@ -276,7 +251,11 @@ describe("Game", function () {
         it("finishes the game", function () {
           var freezedMoment = moment("2014-10-18 19:30", "YYYY-MM-DD HH:mm");
           sinon.useFakeTimers(freezedMoment.toDate().getTime());
-          var subject = new model({ status: "running", startAt: "2014-10-18T18:45:02" });
+          var subject = new model({
+            status: "running",
+            startAt: "2014-10-18T18:45:02",
+            clock: { time: "00:09:59"},
+          });
           subject.resume();
           expect(subject.status).to.equal("finished");
         });
