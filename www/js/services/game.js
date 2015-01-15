@@ -23,28 +23,24 @@ angular.module("dozeoudez.services")
       self._rev = response.rev;
     };
 
-    var parseType = function (value) {
-      if (value instanceof moment) {
-        value = value.format();
+    var play = function () {
+      if (self.clock.isTimesUp()) {
+        self.finish();
+        return;
       }
-      return value;
+      self.clock.start();
+      self.status = STATUSES.running;
     };
 
-    var elapsedSecondsFrom = function (time) {
-      return time.diff(self.startAt, "s");
+    var refreshClock = function () {
+      var now = moment();
+      var updatedAt =  self.updatedAt || self.startedAt;
+      var diffSeconds = now.diff(updatedAt, "s");
+      self.clock.time.subtract(diffSeconds, "s");
     };
 
     var public = {
-      dbFields: [
-        "status",
-        "startAt",
-        "pausedAt",
-        "finishedAt",
-        "resumedAt",
-        "homeTeam",
-        "clock",
-        "awayTeam"
-      ],
+      //TODO: spec
       toJSON: function () {
         var doc = { _id: self.id, _rev: self.rev };
         _.each(self.dbFields, function(field) {
@@ -60,33 +56,22 @@ angular.module("dozeoudez.services")
         });
         return doc;
       },
-      play: function () {
-        if (self.clock.isTimesUp()) {
-          self.finish();
-          return;
-        }
-        self.clock.start();
-        self.status = STATUSES.running;
-      },
       start: function () {
         console.log("start");
-        if (!self.startAt) {
-          self.startAt = moment();
+        if (!self.startedAt) {
+          self.startedAt = moment();
         }
-        self.play();
+        play();
         self.save();
       },
       resume: function () {
-        if (self.isRunning()) {
-          self.refreshClock();
-          self.play();
-        }
-        self.resumedAt = moment();
+        if (self.isNotRunning()) { return; }
+        refreshClock();
+        play();
       },
       pause: function () {
         console.log("pause");
         self.clock.stop();
-        self.pausedAt = moment();
         self.status = STATUSES.paused;
         self.save();
       },
@@ -97,34 +82,29 @@ angular.module("dozeoudez.services")
         self.status = STATUSES.finished;
         self.save();
       },
+      //TODO: move
+      _touch_dates: function () {
+        self.createdAt = self.createdAt || moment();
+        self.updatedAt = moment();
+      },
+      //TODO: move
       _save: function (obj) {
         var putOrPost = self.id ? db.put : db.post;
-        return putOrPost(obj);
+        self._touch_dates();
+        return putOrPost(obj).
+          then(setIdAndRevision).
+          catch(function (err) { console.error(err); });
       },
+      //TODO: move
       save: function () {
         console.log("#save");
         var obj = self.toJSON();
         return self._save(obj)
-        .then(setIdAndRevision)
-        .catch(function (err) {
-          console.log("#save err");
-          console.error(err);
-          console.log(self);
-        });
       },
-      isRunning: function () {
-        return self.status == "running";
-      },
-      refreshClock: function () {
-        var now = moment();
-        var time =  self.resumedAt || self.startAt;
-        var diffFromStart = now.diff(time, "s");
-        console.log(0);
-        console.log(self.resumedAt.toDate());
-        console.log(now.toDate());
-        console.log(diffFromStart);
-        self.clock.time.subtract(diffFromStart, "s");
-      },
+      //TODO: spec
+      isRunning: function () { return self.status == "running"; },
+      //TODO: spec
+      isNotRunning: function () { return !self.isRunning(); },
       score: function (team, points) {
         if (self.status != "running") { return ; }
         team.points += points;
@@ -146,7 +126,7 @@ angular.module("dozeoudez.services")
   Game.current = function () {
     console.log("#current");
     var lastGame = function (doc) {
-      emit(doc.startAt);
+      emit(doc.startedAt);
     };
 
     var returnGame = function (response) {

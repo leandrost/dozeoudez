@@ -21,8 +21,8 @@ describe("Game", function () {
       it("#status is paused", function () {
         expect(subject.status).to.equal("paused");
       });
-      it("#startAt is null", function () {
-        expect(subject.startAt).to.equal(null);
+      it("#startedAt is null", function () {
+        expect(subject.startedAt).to.equal(null);
       });
       it("#homeTeam points is zero", function () {
         expect(subject.homeTeam.points).to.equal(0);
@@ -42,9 +42,9 @@ describe("Game", function () {
           expect(subject.homeTeam).to.deep.equal({ points: 10 });
         });
         it("assigns a date field as moment", function () {
-          var subject = new model({ startAt: "2014-10-18T18:45:02" });
+          var subject = new model({ startedAt: "2014-10-18T18:45:02" });
           var startAtMoment = moment("2014-10-18T18:45:02");
-          expect(subject.startAt.format()).to.deep.equal(startAtMoment.format());
+          expect(subject.startedAt.format()).to.deep.equal(startAtMoment.format());
         });
 
       });
@@ -67,11 +67,11 @@ describe("Game", function () {
         expect(subject.status).to.equal("running");
       });
 
-      it("sets startAt to now", function () {
+      it("sets startedAt to now", function () {
         var freezedMoment = moment("2010-10-20 4:30", "YYYY-MM-DD HH:mm");
         sinon.useFakeTimers(freezedMoment.toDate().getTime());
         subject.start();
-        expect(subject.startAt.toString()).to.equal(freezedMoment.toString());
+        expect(subject.startedAt.toString()).to.equal(freezedMoment.toString());
       });
 
       it("save game", function () {
@@ -131,16 +131,13 @@ describe("Game", function () {
     describe("#save()", function () {
 
       beforeEach(function () {
-        subject.db = sinon.stub();
         fakePromise = {};
-        var catchObj = { catch: function () { return fakePromise; } };
-        var thenObj = { then: function () { return catchObj; } };
-        subject.db.post = sinon.stub().returns(thenObj);
+        subject._save = sinon.stub().returns(fakePromise);
       });
 
       it("persists a game db fields onn database", function () {
         subject.status = "running";
-        subject.startAt = moment.parseZone("2014-09-10T20:30:00.000+03:00");
+        subject.startedAt = moment.parseZone("2014-09-10T20:30:00.000+03:00");
         subject.homeTeam = { points: 7 };
         subject.awayTeam = { points: 2 };
         subject.save();
@@ -215,7 +212,7 @@ describe("Game", function () {
         var attrs = {
           status: "running",
           clock: { time: "00:09:59"},
-          startAt: "2014-10-18 19:27:41",
+          startedAt: "2014-10-18 19:27:41",
         };
         subject.play = sinon.stub();
         subject = new model(attrs);
@@ -224,27 +221,20 @@ describe("Game", function () {
       });
 
       context("when game was paused", function () {
-        it.only("refreshs the clock time from resume time", function () {
-          var freezedMoment = moment("2014-10-18 19:30:00", "YYYY-MM-DD HH:mm");
-          sinon.useFakeTimers(freezedMoment.toDate().getTime());
+        it("refreshs the clock time from last update date", function () {
+          var now = moment("2014-10-18 19:30:23", "YYYY-MM-DD HH:mm");
+          sinon.useFakeTimers(now.toDate().getTime());
           var attrs = {
             status: "running",
-            clock: { time: "00:09:50"},
-            startAt: "2014-10-18 19:27:41",
-            resumedAt: "2014-10-18 19:29:00",
+            clock: { time: "00:09:50" },
+            startedAt: "2014-10-18 19:27:41",
+            updatedAt: "2014-10-18 19:29:00",
           };
           subject.play = sinon.stub();
           subject = new model(attrs);
           subject.resume();
-          expect(subject.clock.toString()).to.equal("08:50");
+          expect(subject.clock.toString()).to.equal("08:49");
         });
-      });
-
-      it("sets resumedAt with current momment", function () {
-        var now = moment();
-        sinon.useFakeTimers(now.toDate().getTime());
-        subject.resume();
-        expect(subject.resumedAt.toDate()).to.deep.equal(now.toDate());
       });
 
       context("when game is running and times up", function () {
@@ -253,7 +243,7 @@ describe("Game", function () {
           sinon.useFakeTimers(freezedMoment.toDate().getTime());
           var subject = new model({
             status: "running",
-            startAt: "2014-10-18T18:45:02",
+            startedAt: "2014-10-18T18:45:02",
             clock: { time: "00:09:59"},
           });
           subject.resume();

@@ -13,10 +13,10 @@ angular.module("dozeoudez.services")
     "Game": {
       attributes: {
         status: { default: "paused" },
-        startAt: { type: "Moment", default: null },
-        pausedAt: { type: "Moment", default: null },
+        startedAt: { type: "Moment", default: null },
         finishedAt: { type: "Moment", default: null },
-        resumedAtAt: { type: "Moment", default: null },
+        createdAt: { type: "Moment", default: null },
+        updatedAt: { type: "Moment", default: null },
         homeTeam: { default: { points: 0 } },
         awayTeam: { default: { points: 0 } },
       },
@@ -31,6 +31,7 @@ angular.module("dozeoudez.services")
     attrs = attrs || {};
     obj.id = attrs._id || null;
     obj.rev = attrs._rev || null;
+    obj._type = attrs._type || type;
     loadAttributes(schema, obj, attrs);
     loadAssociations(schema, obj, attrs);
   };
