@@ -19,7 +19,7 @@ module.exports = function(config) {
       'www/lib/es5-shim/es5-shim.js',
       'www/lib/momentjs/moment.js',
       'www/lib/moment-timezone/moment-timezone.js',
-      'www/lib/pouchdb/dist/pouchdb-nightly.js',
+      'www/lib/pouchdb/dist/pouchdb.js',
       'www/lib/angular/angular.js',
       'www/lib/angular-animate/angular-animate.js',
       'www/lib/angular-cookies/angular-cookies.js',
@@ -27,7 +27,7 @@ module.exports = function(config) {
       'www/lib/angular-sanitize/angular-sanitize.js',
       'www/lib/angular-routes/angular-route.js',
       'www/lib/angular-touch/angular-touch.js',
-      'www/lib/angular-pouchdb/angular-pouchdb.js',
+      'www/lib/angular-pouchdb/dist/angular-pouchdb.js',
       'www/lib/angular-ui-router/release/angular-ui-router.js',
       'www/lib/ionic/js/ionic.js',
       'www/lib/ionic/js/ionic-angular.min.js',
@@ -81,6 +81,7 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: false,
+
   });
 };

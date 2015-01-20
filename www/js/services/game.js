@@ -14,7 +14,19 @@ angular.module("dozeoudez.services")
 
     function init() {
       db.load("Game", self, attrs);
+      db.changes({ since: "now", include_docs: true, live: true }).on('change', function(change) {
+        console.log(change);
+        var needReload = isNew && change.doc.status == "finished";
+        if (change.deleted || needReload) return;
+        console.log("reload");
+        db.load("Game", self, change.doc);
+        self.resume();
+      });
     }
+
+    var isNew = function () {
+      return self.id === null;
+    };
 
     var setIdAndRevision = function(response){
       self.id = response.id;
@@ -23,8 +35,25 @@ angular.module("dozeoudez.services")
       self._rev = response.rev;
     };
 
+    var hasAWinner =  function () {
+      try {
+        return (self.homeTeam.points >= MAX_POINTS ||
+                self.awayTeam.points >= MAX_POINTS);
+      } catch (e) {
+        return false;
+      }
+    };
+
+    var hasFinished = function () {
+      try {
+        return self.clock.isTimesUp() || hasAWinner();
+      } catch (e) {
+        return false;
+      }
+    };
+
     var play = function () {
-      if (self.clock.isTimesUp()) {
+      if (hasFinished()) {
         self.finish();
         return;
       }
@@ -34,26 +63,33 @@ angular.module("dozeoudez.services")
 
     var refreshClock = function () {
       var now = moment();
-      var updatedAt =  self.updatedAt || self.startedAt;
+      console.log(now.toString());
+      var updatedAt = self.updatedAt || self.startedAt;
+      if (!updatedAt) return;
+      console.log(updatedAt.toString());
       var diffSeconds = now.diff(updatedAt, "s");
+      console.log(diffSeconds);
+      console.log(self.clock.toString());
       self.clock.time.subtract(diffSeconds, "s");
+      console.log("refreshed Clock:", self.clock.toString());
     };
 
     var public = {
-      //TODO: spec
       toJSON: function () {
-        var doc = { _id: self.id, _rev: self.rev };
-        _.each(self.dbFields, function(field) {
-          var value = self[field];
+        var doc = { };
+        var attrs = _.keys(self.schema.attributes);
+        _.each(attrs, function(attr) {
+          var value = self[attr];
           if (!value) { return; }
           if (value.toJSON){
-            doc[field] = value.toJSON();
+            doc[attr] = value.toJSON();
           } else if (moment.isMoment(value)){
-            doc[field] = value.format();
+            doc[attr] = value.format();
           } else {
-            doc[field] = value;
+            doc[attr] = value;
           }
         });
+        doc.clock = self.clock.toJSON();
         return doc;
       },
       start: function () {
@@ -83,26 +119,27 @@ angular.module("dozeoudez.services")
         self.save();
       },
       //TODO: move
-      _touch_dates: function () {
+      _touch: function () {
         self.createdAt = self.createdAt || moment();
         self.updatedAt = moment();
       },
       //TODO: move
       _save: function (obj) {
-        var putOrPost = self.id ? db.put : db.post;
-        self._touch_dates();
-        return putOrPost(obj).
+        console.log("saving object", obj);
+        var putOrPost = self.id ? db.put(obj) : db.post(obj);
+        return putOrPost.
           then(setIdAndRevision).
-          catch(function (err) { console.error(err); });
+          catch(function (err) { console.log(err.stack); });
       },
       //TODO: move
       save: function () {
         console.log("#save");
+        self._touch();
         var obj = self.toJSON();
-        return self._save(obj)
+        return self._save(obj);
       },
       //TODO: spec
-      isRunning: function () { return self.status == "running"; },
+      isRunning: function () { return (self.status == "running"); },
       //TODO: spec
       isNotRunning: function () { return !self.isRunning(); },
       score: function (team, points) {

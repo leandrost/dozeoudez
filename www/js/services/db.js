@@ -1,15 +1,14 @@
 angular.module("dozeoudez.services")
 
-.factory("db", function (pouchdb, $window, $injector) {
+.factory("db", function (pouchDB, $window, $injector) {
   var config = AppConfig.database;
-  var dbName = config.name;
-  var dbSyncURL = config.host + ":" + config.port + "/" + dbName;
-  var db = pouchdb.create(dbName);
-  PouchDB.sync(dbName, dbSyncURL, {live: true, retry: true});
+  var syncURL = config.host + ":" + config.port + "/" + config.name;
+  var db = pouchDB(config.name);
+  db.Sync = db.sync(syncURL, {live: true, retry: true});
 
   $window.db = db;
 
-  var schemas = {
+  db.schema =  {
     "Game": {
       attributes: {
         status: { default: "paused" },
@@ -26,20 +25,28 @@ angular.module("dozeoudez.services")
     }
   };
 
-  db.load = function (type, obj, attrs) {
-    var schema = schemas[type];
-    attrs = attrs || {};
-    obj.id = attrs._id || null;
-    obj.rev = attrs._rev || null;
-    obj._type = attrs._type || type;
-    loadAttributes(schema, obj, attrs);
-    loadAssociations(schema, obj, attrs);
+  var defaultSchema = {
+    _id: { default: null },
+    _rev: { default: null },
+    createdAt: { type: "Moment", default: null },
+    updatedAt: { type: "Moment", default: null },
   };
 
-  var loadAttributes = function (schema, obj, attrs) {
+  db.load = function (type, obj, attrs) {
+    obj.schema = db.schema[type];
+    _.extend(obj.schema.attributes, { type: { default: type } }, defaultSchema);
+    attrs = attrs || {};
+    loadAttributes(obj, attrs);
+    loadAssociations(obj, attrs);
+  };
+
+  var loadAttributes = function (obj, attrs) {
+    var schema = obj.schema;
     _.forIn(schema.attributes, function (schema, field) {
       obj[field] = parseAttribute(schema, attrs[field]);
     });
+    obj.id = obj._id;
+    obj.rev = obj._rev;
   };
 
   var parseAttribute = function (schema, value) {
@@ -49,7 +56,8 @@ angular.module("dozeoudez.services")
     return value || schema.default;
   };
 
-  var loadAssociations = function (schema, obj, attrs) {
+  var loadAssociations = function (obj, attrs) {
+    var schema = obj.schema;
     _.forIn(schema.associations, function (schema, field) {
       var assoc = $injector.get("GameClock");
       obj[field] = new assoc(obj, attrs[field]);

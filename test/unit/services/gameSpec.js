@@ -250,6 +250,47 @@ describe("Game", function () {
           expect(subject.status).to.equal("finished");
         });
       });
+      context("when the team has 12 points", function () {
+        it("finishes the game", function () {
+          subject.finish = sinon.stub();
+          subject.status = "running";
+          subject.awayTeam.points = 12;
+          subject.resume();
+          expect(subject.finish).to.have.been.called;
+        });
+      });
+
+      context("when the team has more than 12 points", function () {
+        it("finishes the game", function () {
+          subject.finish = sinon.stub();
+          subject.status = "running";
+          subject.homeTeam.points = 13;
+          subject.resume();
+          expect(subject.finish).to.have.been.called;
+        });
+      });
+    });
+
+    describe("#toJSON", function () {
+      it("returns object as json", function () {
+        var attrs = {
+          _id: "some-id",
+          _rev: "some-rev",
+          type: "Game",
+          status: "running",
+          clock: { time: "00:09:50" },
+          homeTeam: { points: 7 },
+          awayTeam: { points: 2 },
+          startedAt: "2014-10-18T19:27:41.000Z",
+          createdAt: "2014-10-18T19:27:42.000Z",
+          updatedAt: "2014-10-18T19:29:00.000Z",
+        };
+        var obj = model(attrs);
+        var json = obj.toJSON();
+        console.log(json);
+        console.log(attrs);
+        expect(json).to.deep.equal(attrs);
+      });
     });
 
 });
