@@ -2,7 +2,7 @@
   "name": "dozeoudez",
   "private": "true",
   "dependencies": {
-    "angular-pouchdb": "git@github.com:leandrost/angular-pouchdb.git#master",
+    "angular-pouchdb": "leandrost/angular-pouchdb#master",
     "es5-shim": "~4.0.3",
     "momentjs": "~2.8.3",
     "moment-timezone": "~0.2.5",
