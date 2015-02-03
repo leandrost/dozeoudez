@@ -1,7 +1,7 @@
 {
   "name": "dozeoudez",
-  "version": "1.0.0",
-  "description": "Doze ou Dez: perdeu tá de outra",
+  "version": "0.0.1",
+  "description": "Doze ou Dez: Feito para o basquete de rua",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",

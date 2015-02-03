@@ -20,13 +20,13 @@ $ npm install
 ## Run in browse
 
 ```bash
-$ ionic serve
+$ npm start
 ```
 
 ## Run in android device
 
 ```bash
-$ ionic run android
+$ npm run android
 ```
 
 ## Run the tests
