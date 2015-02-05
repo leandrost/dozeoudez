@@ -1,6 +1,7 @@
 angular.module("dozeoudez", [
   "ionic",
   "pouchdb",
+  "ngMaterial",
   "dozeoudez.controllers",
   "dozeoudez.services"
 ])
@@ -31,7 +32,14 @@ angular.module("dozeoudez", [
       controller: "GameCtrl"
     });
 
+  $stateProvider
+    .state("sample", {
+      url: "/sample",
+      templateUrl: "templates/sample.html",
+      controller: "GameCtrl"
+    });
+
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise("/game");
+  $urlRouterProvider.otherwise("/sample");
 
 });
