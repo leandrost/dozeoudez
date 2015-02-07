@@ -1,6 +1,5 @@
 .droid-bar {
-  background-color: #33b5e5;
-  border-color: #0099cc;
+  background-color: #FF6600;
   color: #ffffff;
 }
 
@@ -24,7 +23,12 @@
  text-align: center;
 }
 .scoreboard a{
-  color: #33b5e5;
+  color: #ccc;
+  display: block;
+}
+
+.scoreboard a.winner{
+  color: #ff6600;
   display: block;
 }
 

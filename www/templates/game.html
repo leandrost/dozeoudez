@@ -1,21 +1,14 @@
-<ion-view>
-  <ion-nav-bar>
-    <ion-header-bar align-title="left" class="droid-bar">
-      <ion-nav-back-button class="button-clear">
-        <i class="ion-android-arrow-back"></i>
-      </ion-nav-back-button>
-      <h1 class="title">
-        <i class="ion-ios7-basketball"></i>
-        Doze ou Dez
-      </h1>
-      <div class="buttons">
-        <a class="button button-icon"
-          ng-class="{ paused: 'ion-play', running: 'ion-pause' }[game.status]"
-          ng-click="playPause()"></a>
-        <a class="button button-icon ion-stop" ng-click="reset()"></a>
-      </div>
-    </ion-header-bar>
-  </ion-nav-bar>
+<ion-view view-title="Doze ou Dez">
+
+  <ion-nav-bar align-title="left" class="droid-bar"></ion-nav-bar>
+
+  <ion-nav-buttons side="secondary">
+    <a class="button button-icon"
+      ng-class="{ paused: 'ion-play', running: 'ion-pause' }[game.status]"
+      ng-click="playPause()"></a>
+    <a class="button button-icon ion-stop" ng-click="reset()"></a>
+  </ion-nav-buttons>
+
   <ion-content>
       <div class="row row-center">
         <div class="col5">id: {{game.id}}</div>
