@@ -1,3 +1,4 @@
+
 .droid-bar {
   background-color: #FF6600;
   color: #ffffff;
@@ -13,36 +14,31 @@
   vertical-align: middle;
 }
 
-.scoreboard div, .scoreboard a{
-  font-size: 2.2em;
-  padding-bottom: 10px;
-  text-align: center;
-}
 
 .scoreboard {
- text-align: center;
-}
-.scoreboard a{
-  color: #ccc;
-  display: block;
-}
-
-.scoreboard a.winner{
-  color: #ff6600;
-  display: block;
+  font-size: 2.2em;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 0px;
 }
 
-.scoreboard a, .scoreboard h2{
+.scoreboard .team{
+  font-size: 1.4em;
+  padding-bottom: 10px;
+  text-align: center;
+  color: black;
+}
+
+.scoreboard .clock{
   font-size: 1.4em;
 }
 
-.scoreboard .col-33 {
-  width: 33%;
-}
+.scoreboard .points { color: #ccc; }
+.scoreboard .lead { color: #ff6600; }
 
-.scoreboard a{
-  text-decoration: none;
-}
+.scoreboard .col-33 { width: 33%; }
+
+.scoreboard a { text-decoration: none; }
 
 .item-player-divider{
   text-align: center;

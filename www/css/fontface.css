@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.ttf');
+    src: url('../fonts/Roboto-Regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Roboto-Regular.woff2') format('woff2'),
+         url('../fonts/Roboto-Regular.woff') format('woff'),
+         url('../fonts/Roboto-Regular.ttf') format('truetype'),
+         url('../fonts/Roboto-Regular.svg#Roboto') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Freshman';
+    src: url('../fonts/Freshman.ttf');
+    src: url('../fonts/Freshman.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Freshman.woff2') format('woff2'),
+         url('../fonts/Freshman.woff') format('woff'),
+         url('../fonts/Freshman.ttf') format('truetype'),
+         url('../fonts/Freshman.svg#Freshman') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
