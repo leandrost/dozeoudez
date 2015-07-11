@@ -1,7 +1,6 @@
 angular.module("dozeoudez", [
   "ionic",
   "pouchdb",
-  "ngMaterial",
   "dozeoudez.controllers",
   "dozeoudez.services"
 ])
